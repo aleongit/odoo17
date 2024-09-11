@@ -283,6 +283,11 @@ default_productivity_apps = True
 - `python3 odoo-bin -c odoo.conf`
 
 
+### Connect to Odoo with browser
+- http://192.168.1.60:8069/
+
+
+
 
 ## Doc
 - https://www.odoo.com/documentation/17.0/administration/on_premise/source.html
