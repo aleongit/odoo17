@@ -149,10 +149,100 @@ wkhtmltopdf 0.12.6
 ```
 
 
+### Install and configure PostgreSQL
+- `sudo apt install postgresql postgresql-client`
+- `sudo systemctl status postgresql.service`
+```
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/usr/lib/systemd/system/postgresql.service; enabled; preset: enabled)
+     Active: active (exited) since Wed 2024-09-11 07:59:47 UTC; 3h 1min ago
+    Process: 18599 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 18599 (code=exited, status=0/SUCCESS)
+        CPU: 3ms
 
+de set. 11 07:59:47 ubuserver systemd[1]: Starting postgresql.service - PostgreSQL RDBMS...
+de set. 11 07:59:47 ubuserver systemd[1]: Finished postgresql.service - PostgreSQL RDBMS.
+```
+
+- by default, the only user is **postgres**. As Odoo forbids connecting as postgres, create a new PostgreSQL user
+- `sudo -u postgres createuser -d -R -S $USER`
+- `createdb $USER`
+- because the PostgreSQL user has the same name as the Unix login, it is possible to connect to the database without a password
+- or if user linux and user postgresql have the same password
+
+- connect to PostgreSQL
+- `sudo -u postgres psql`
+- `postgres=# \l`
+```                                                       List of databases
+   Name    |  Owner   | Encoding | Locale Provider |   Collate   |    Ctype    | ICU Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+-------------+-------------+------------+-----------+-----------------------
+ aleon     | aleon    | UTF8     | libc            | ca_ES.UTF-8 | ca_ES.UTF-8 |            |           |
+ postgres  | postgres | UTF8     | libc            | ca_ES.UTF-8 | ca_ES.UTF-8 |            |           |
+ template0 | postgres | UTF8     | libc            | ca_ES.UTF-8 | ca_ES.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | ca_ES.UTF-8 | ca_ES.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+```    
+- `postgres=# \du`
+```   
+                             List of roles
+ Role name |                         Attributes
+-----------+------------------------------------------------------------
+ aleon     | Create DB
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS
+```
+
+- create new password for *aleon* user, the same of the linux user
+- `postgres=# ALTER USER aleon PASSWORD 'password';`
+
+- **to activate remote connection for DBeaver in host**
+- `sudo nano /etc/postgresql/16/main/postgresql.conf`
+- **postgresql.conf**
+```
+...
+#------------------------------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#------------------------------------------------------------------------------
+
+# - Connection Settings -
+
+#listen_addresses = 'localhost'         # what IP address(es) to listen on;
+                                        # comma-separated list of addresses;
+                                        # defaults to 'localhost'; use '*' for all
+                                        # (change requires restart)
+listen_addresses = '*'
+port = 5432                             # (change requires restart)
+...
+```
+
+- `sudo nano /etc/postgresql/16/main/pg_hba.conf`
+- **pg_hba.conf**
+```
+...
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+# host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             0.0.0.0/0               md5
+# IPv6 local connections:
+#host    all             all             ::1/128                 scram-sha-256
+host    all             all             ::/0                    md5
+...
+```
+
+- `sudo systemctl restart postgresql`
 
 
 
 
 ## Doc
 - https://www.odoo.com/documentation/17.0/administration/on_premise/source.html
+- https://www.cybrosys.com/blog/how-to-install-odoo-17-on-ubuntu-20-04-lts-server
+- https://www.rosehosting.com/blog/how-to-install-odoo-17-on-ubuntu-22-04/
+- https://stackoverflow.com/questions/12720967/how-can-i-change-a-postgresql-user-password
+- https://stackoverflow.com/questions/18580066/how-to-allow-remote-access-to-postgresql-database
