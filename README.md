@@ -19,29 +19,40 @@ Checkpoints:
 
 ## Requeriments / Prerequisites
 
+```
 OS: Ubuntu noble 24.04 x86_64
 Host: VMware Virtual Platform
 Kernel: Linux 6.8.0-41-generic
+```
 
-🖥️ lsb_release -a
-→
+- 🖥️ `lsb_release -a`
+```
 No LSB modules are available.
 Distributor ID: Ubuntu
 Description:    Ubuntu 24.04.1 LTS
 Release:        24.04
 Codename:       noble
+```
 
-🖥️ git --version
-→ git version 2.43.0
+- 🖥️ `git --version`
+```
+git version 2.43.0
+```
 
-🖥️ python3 --version
-→ Python 3.12.3
+- 🖥️ `python3 --version`
+```
+Python 3.12.3
+```
 
-🖥️ pip3 --version
-→ pip 24.0 from /usr/lib/python3/dist-packages/pip (python 3.12)
+- 🖥️ `pip3 --version`
+```
+pip 24.0 from /usr/lib/python3/dist-packages/pip (python 3.12)
+```
 
-🖥️ sudo -u postgres psql
-→ psql (16.4 (Ubuntu 16.4-0ubuntu0.24.04.2))
+- 🖥️ `sudo -u postgres psql`
+```
+psql (16.4 (Ubuntu 16.4-0ubuntu0.24.04.2))
+```
 
 
 
