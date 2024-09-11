@@ -238,6 +238,50 @@ host    all             all             ::/0                    md5
 - `sudo systemctl restart postgresql`
 
 
+### Install Odoo
+
+- `git clone https://github.com/odoo/odoo.git --depth 1 --branch 17.0 odoo17`
+- install dependencies with *venv* and *pip*
+- `cd odoo17`
+- `python3 -m venv venv`
+- `source venv/bin/activate`
+```
+(venv) aleon@ubuserver:~/odoo17$
+```
+- `pip install -r requirements.txt`
+
+### Run Odoo
+- **Odoo 17 documentation**
+```
+python3 odoo-bin --addons-path=addons -d mydb
+```
+- to run first time without config file and force the creation of database
+- `python3 odoo-bin -d aleon -i base`
+- after execute
+- `python3 odoo-bin -d aleon`
+- or
+- `python3 odoo-bin`
+- to save the current configuration into a default file
+- `python3 odoo-bin --save`
+- the file will be save into `/home/aleon/.odoorc`
+
+### Create congif file and run Odoo with this file
+- `sudo nano odoo.conf`
+```
+[options]
+; This is the password that allows database operations:
+; admin_passwd = admin
+db_host = False
+db_port = False
+db_user = aleon
+;db_password = 
+addons_path = addons/, custom/
+default_productivity_apps = True
+```
+- `python3 odoo-bin -c odoo.conf -d aleon`
+- or
+- `python3 odoo-bin -c odoo.conf`
+
 
 
 ## Doc
