@@ -108,15 +108,11 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "descripció del model propietat immobilària"
 
-    name = fields.Char(
-        required=True
-    )
+    name = fields.Char()
     description = fields.Text()
     postcode = fields.Char()
     date_availability = fields.Date()
-    expected_price = fields.Float(
-        required=True
-    )
+    expected_price = fields.Float()
     selling_price = fields.Float()
     bedrooms = fields.Integer()
     living_area = fields.Integer()
@@ -165,3 +161,81 @@ Foreign-key constraints:
     "estate_property_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
     "estate_property_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
 ```
+
+
+## Common Attributes
+
+```
+name = fields.Char(required=True)
+```
+
+Some attributes are available on all fields, here are the most common ones:
+
+- **`string` (str, default: field’s name)**
+The label of the field in UI (visible by users).
+
+- **`required` (bool, default: False)**
+If True, the field can not be empty. It must either have a default value or always be given a value when creating a record.
+
+- **`help` (str, default: '')**
+Provides long-form help tooltip for users in the UI.
+
+- **`index` (bool, default: False)**
+Requests that Odoo create a database index on the column.
+
+
+- - **tutorials/estate/models/estate_property.py**
+```py
+from odoo import models, fields
+
+
+class EstateProperty(models.Model):
+    _name = "estate.property"
+    _description = "descripció del model propietat immobilària"
+
+    name = fields.Char(
+        required=True
+    )
+...
+    expected_price = fields.Float(
+        required=True
+    )
+...
+```
+
+```
+$ psql -d rd-demo
+rd-demo=# \d estate_property;
+                                            Table "public.estate_property"
+    Column       |            Type             | Collation | Nullable |                   Default
+--------------------+-----------------------------+-----------+----------+---------------------------------------------
+...
+name               | character varying           |           | not null |
+...
+expected_price     | double precision            |           | not null |
+...
+```
+
+
+## Automatic Fields
+
+- You may have noticed your model has a few fields you never defined. Odoo creates a few fields in all models
+- These fields are managed by the system and can’t be written to, but they can be read if useful or necessary
+
+- **`id` (Id)**
+The unique identifier for a record of the model
+
+- **`create_date` (Datetime)**
+Creation date of the record
+
+- **`create_uid` (Many2one)**
+User who created the record
+
+- **`write_date` (Datetime)**
+Last modification date of the record
+
+- **`write_uid` (Many2one)**
+User who last modified the record
+
+- it is possible to *disable* the automatic creation of some fields
+- writing raw SQL queries is possible, but requires caution as this bypasses all Odoo authentication and security mechanisms
