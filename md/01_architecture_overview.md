@@ -1,5 +1,8 @@
 # Chapter 1: Architecture Overview
 
+https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101/01_architecture.html
+
+
 
 ## Multitier application
 - Odoo follows a multitier architecture, meaning that the presentation, the business logic and the data storage are separated
