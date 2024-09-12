@@ -103,5 +103,24 @@ id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_estate_property,access_estate_property,model_estate_property,base.group_user,1,1,1,1
 ```
 
+- add access rights in `__manifest__.py`
+```
+# -*- coding: utf-8 -*-
+# tutorial
+{
+    'name': "Real Estate",
+    'version': '1.0',
+    'license': 'AGPL-3',
+    'depends': ['base'],
+    'author': "aleon",
+    'category': 'Test',
+    'description': "Description of Real Estate",
+    # data files always loaded at installation
+    'data': ['security/ir.model.access.csv',],
+    # data files containing optionally loaded demonstration data
+    # 'demo': ['demo/demo_data.xml',],
+}
+```
+
 - restart Odoo
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
