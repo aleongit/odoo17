@@ -184,7 +184,7 @@ Provides long-form help tooltip for users in the UI.
 Requests that Odoo create a database index on the column.
 
 
-- - **tutorials/estate/models/estate_property.py**
+- **tutorials/estate/models/estate_property.py**
 ```py
 from odoo import models, fields
 
