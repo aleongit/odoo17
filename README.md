@@ -11,6 +11,7 @@ Checkpoints:
 - [Setup guide](md/0_setup.md)
 - [Chapter 1: Architecture Overview](md/01_architecture_overview.md)
 - [Chapter 2: A New Application](md/02_a_new_application.md)
+- [Chapter 3: Models And Basic Fields](md/02_a_new_application.md)
 
 
 
