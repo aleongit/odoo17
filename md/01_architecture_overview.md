@@ -48,7 +48,7 @@ Images, CSS or JavaScript files used by the web interface or website
 - An Odoo module is declared by its manifest.
 https://www.odoo.com/documentation/17.0/developer/reference/backend/module.html#reference-module-manifest
 
-- When an Odoo module includes business objects (i.e. Python files), they are organized as a Python package with a **__init__.py** file
+- When an Odoo module includes business objects (i.e. Python files), they are organized as a Python package with a `__init__.py` file
 - This file contains import instructions for various Python files in the module.
 https://docs.python.org/3/tutorial/modules.html#packages
 
