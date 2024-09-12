@@ -1,4 +1,4 @@
-## Setup guide
+# Setup guide
 
 - https://www.odoo.com/documentation/17.0/developer/tutorials/setup_guide.html
 
