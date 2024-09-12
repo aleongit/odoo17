@@ -4,8 +4,8 @@ Checkpoints:
 
 - install Odoo 17 on-premise with Source install on Ubuntu Server 24.04.1 LTS
 - **odoo tutorials**
-- 0. [Setup guide](md/0_setup.md)
-- 1. [Chapter 1: Architecture Overview](md/01_architecture_overview.md)
+- [Setup guide](md/0_setup.md)
+- [Chapter 1: Architecture Overview](md/01_architecture_overview.md)
 
 - https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101/02_newapp.html
 - TODO: https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101/03_basicmodel.html
