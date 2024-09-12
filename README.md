@@ -13,6 +13,7 @@ Checkpoints:
 - [Chapter 2: A New Application](md/02_a_new_application.md)
 - [Chapter 3: Models And Basic Fields](md/03_models_and_basic_fields.md)
 - [Chapter 4: Security - A Brief Introduction](md/04_security_a_brief_introduction.md)
+- TODO: https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101/05_firstui.html
 
 
 
