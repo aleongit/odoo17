@@ -152,6 +152,33 @@ from . import estate_property_type
 </odoo>
 ```
 
+- afegim camp relacionat al 1r model
+- **tutorials/estate/models/estate_property.py**
+```
+class EstateProperty(models.Model):
+    _name = "estate.property"
+    _description = "descripció del model propietat immobilària"
+
+    # reserved fields (name, active, state)
+    name = fields.Char(
+        string="Name",
+        required=True
+    )
+...
+    property_type_id = fields.Many2one(
+        "estate.property.type", string="Property Type")
+```
+
+- afegim camp al formulari del 1r model
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<group>
+    <field name="property_type_id"/>
+    <field name="postcode"/>
+    <field name="date_availability" string="Available From"/>
+</group>
+```
+
 - afegim fitxers a manifest
 - **tutorials/estate/__manifest__.py**
 ```
