@@ -10,6 +10,7 @@
                 <field name="name" string="Title" />
                 <field name="state" />
                 <field name="property_type_id"/>
+                <field name="tag_ids" widget="many2many_tags"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
@@ -83,6 +84,7 @@
             <search string="Busca...">
                 <field name="name" string="Title" />
                 <field name="property_type_id"/>
+                <field name="tag_ids" />
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
