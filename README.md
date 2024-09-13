@@ -25,9 +25,9 @@ Checkpoints:
 - `python3 odoo-bin -c odoo.conf`
 - http://192.168.1.60:8069/
 
-- to run module **estate** of tutorials
+- developing tutorials
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
-
+- `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
 
 
 
