@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- list -->
+    <record id="estate.property_type_list" model="ir.ui.view">
+        <field name="name">Property Type List</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Type" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- form -->
+    <record id="estate.property_type_form" model="ir.ui.view">
+        <field name="name">Property Type Form</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- search -->
+    <record id="estate.property_type_search" model="ir.ui.view">
+        <field name="name">estate.property.type.search</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <search string="Busca...">
+                <field name="name" string="Type" />
+            </search>
+        </field>
+    </record>
+
+
+</odoo>

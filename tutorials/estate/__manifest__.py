@@ -12,8 +12,10 @@
     'data': [
         # data
         # views
-        'views/estate_property_views.xml',
+        'views/estate_actions.xml',
         'views/estate_menus.xml',
+        'views/estate_property_views.xml',
+        'views/estate_property_type_views.xml',
         # access
         'security/ir.model.access.csv',
     ],

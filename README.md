@@ -15,6 +15,7 @@ Checkpoints:
 - [Chapter 4: Security - A Brief Introduction](md/04_security_a_brief_introduction.md)
 - [Chapter 5: Finally, Some UI To Play With](md/05_finally_some_ui_to_play_with.md)
 - [Chapter 6: Basic Views](md/06_basic_views.md)
+- [Chapter 7: Relations Between Models](md/07_relations_between_models.md)
 
 
 

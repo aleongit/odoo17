@@ -44,13 +44,13 @@ class EstateProperty(models.Model):
     garage = fields.Boolean()
     garden = fields.Boolean()
     garden_area = fields.Integer()
+    # Selection [(value, label)]
     garden_orientation = fields.Selection(
         string='Garden Orientation',
         selection=[('north', 'North'), ('south', 'South'),
                    ('east', 'East'), ('west', 'West')],
         help="Type is used to indicate one of the four main points of the compass"
     )
-    # selection
-    # specifies the possible values for this field.
-    # It is given as either a list of pairs (value, label),
-    # or a model method, or a method name.
+    buyer_id = fields.Many2one("res.partner", string="Buyer", copy=False)
+    salesperson_id = fields.Many2one(
+        'res.users', string='Salesperson', index=True, default=lambda self: self.env.user)
