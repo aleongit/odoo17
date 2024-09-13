@@ -262,24 +262,7 @@ class EstateProperty(models.Model):
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form string="Test">
-                <sheet>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group>
-                        <field name="state"/>
-                    </group>
-                    <group>
-                        <group>
-                            <field name="postcode"/>
-                            <field name="date_availability" string="Available From"/>
-                        </group>
-                        <group>
-                            <field name="expected_price"/>
-                            <field name="selling_price"/>
-                        </group>
-                    </group>
-
+...
                     <notebook>
                         <!-- pag description -->
                         <page string="Description">
