@@ -9,6 +9,7 @@
         <!--Settings -->
         <menuitem id="estate_property_type_first_level_menu" name="Settings">
             <menuitem id="estate_property_type_model_menu_action" action="estate.property_type_action"/>
+            <menuitem id="estate_property_tag_model_menu_action" action="estate.property_tag_action"/>
         </menuitem>
     </menuitem>
 </odoo>

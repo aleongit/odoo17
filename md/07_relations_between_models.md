@@ -286,3 +286,51 @@ class EstateProperty(models.Model):
         </field>
     </record>
 ```
+
+
+## Many2many
+
+https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.fields.Many2many
+
+- In our real estate module, we want to define the concept of property tags. A property tag is, for example, a property which is ‘cozy’ or ‘renovated’
+
+- A property can have many tags and a tag can be assigned to many properties. This is supported by the **many2many** concept
+
+- A *many2many* is a bidirectional multiple relationship: any record on one side can be related to any number of records on the other side. For example, in order to define a link to the account.tax model on our test model, we can write:
+
+```
+tax_ids = fields.Many2many("account.tax", string="Taxes")
+```
+
+- By convention, *many2many* fields have the `_ids` suffix. This means that several taxes can be added to our test model. It behaves as a list of records, meaning that accessing the data must be done in a loop:
+```
+for tax in my_test_object.tax_ids:
+    print(tax.name)
+```
+
+- A list of records is known as a `recordset`, i.e. an ordered collection of records. It supports standard Python operations on collections, such as `len()` and `iter()`, plus extra set operations like `recs1` | `recs2`
+
+## Add the Real Estate Property Tag table
+
+- Create the *estate.property.tag* model and add the following field
+- name (Char) *required
+- Add the menus
+- Add the field *tag_ids* to your *estate.property model* and in its form and tree views
+- Tip: in the view, use the `widget="many2many_tags"` attribute
+
+------------------
+
+- create model in `tutorials/estate/models/estate_property_tag.py`
+- add many2many field in `tutorials/estate/models/estate_property.py`
+```
+tag_ids = fields.Many2many("estate.property.tag", string="Tags")
+```
+- add model in models `tutorials/estate/models/__init__.py`
+- add action tag in `tutorials/estate/views/estate_actions.xml`
+- add menu tag in `tutorials/estate/views/estate_menus.xml`
+- create views in `tutorials/estate/views/estate_property_tag_views.xml`
+- add field in `tutorials/estate/views/estate_property_views.xml`
+- add access in `tutorials/estate/security/ir.model.access.csv`
+- add files in `tutorials/estate/__manifest__.py`
+
+

@@ -31,6 +31,9 @@
                         <field name="name"/>
                     </h1>
                     <group>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                    <group>
                         <field name="state"/>
                     </group>
                     <group>
