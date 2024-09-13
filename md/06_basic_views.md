@@ -61,3 +61,87 @@ In our real estate module, we need to organize the fields in a logical way:
 
 </odoo>
 ```
+
+
+## Form
+
+- https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_architectures.html#reference-view-architectures-form
+
+- Forms are used to create and edit single records
+
+- Their root element is `<form>`. They are composed of high-level structure elements (groups and notebooks) and interactive elements (buttons and fields):
+
+```
+<form string="Test">
+    <sheet>
+        <group>
+            <group>
+                <field name="name"/>
+            </group>
+            <group>
+                <field name="last_seen"/>
+            </group>
+        </group>
+        <notebook>
+            <page string="Description">
+                <field name="description"/>
+            </page>
+        </notebook>
+    </sheet>
+</form>
+```
+
+- **group**: define columns layout
+- **sheet**: make the layout responsive
+- **notebook** & **page**: add tabbed sections
+- https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_architectures.html#structural-components
+
+- It is possible to use regular HTML tags such as **div** and **h1** as well as the the class attribute (Odoo provides some built-in classes) to fine-tune the look
+
+- In order to avoid relaunching the server every time you do a modification to the view, it can be convenient to use the `--dev xml` parameter when launching the server:
+- `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
+
+## Add form in Estate Property Model
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<!-- form -->
+    <record id="estate.property_form" model="ir.ui.view">
+        <field name="name">Property</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="postcode"/>
+                            <field name="date_availability" string="Available From"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                                <field name="bedrooms"/>
+                                <field name="living_area" string="Living Area (sqm)"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="garden_area" string="Garden Area (sqm)"/>
+                                <field name="garden_orientation"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+```
