@@ -9,6 +9,7 @@
             <tree>
                 <field name="name" string="Title" />
                 <field name="state" />
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
@@ -78,6 +79,7 @@
         <field name="arch" type="xml">
             <search string="Busca...">
                 <field name="name" string="Title" />
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>

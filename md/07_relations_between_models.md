@@ -169,14 +169,10 @@ class EstateProperty(models.Model):
         "estate.property.type", string="Property Type")
 ```
 
-- afegim camp al formulari del 1r model
+- afegim camp a les vistes del 1r model
 - **tutorials/estate/views/estate_property_views.xml**
 ```
-<group>
-    <field name="property_type_id"/>
-    <field name="postcode"/>
-    <field name="date_availability" string="Available From"/>
-</group>
+<field name="property_type_id"/>
 ```
 
 - afegim fitxers a manifest
