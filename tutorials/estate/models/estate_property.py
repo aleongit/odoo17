@@ -52,12 +52,16 @@ class EstateProperty(models.Model):
         help="Type is used to indicate one of the four main points of the compass"
     )
 
-    #many2one
+    # many2one
     property_type_id = fields.Many2one(
         "estate.property.type", string="Property Type")
     buyer_id = fields.Many2one("res.partner", string="Buyer", copy=False)
     salesperson_id = fields.Many2one(
         'res.users', string='Salesperson', index=True, default=lambda self: self.env.user)
 
-    #many2many
+    # many2many
     tag_ids = fields.Many2many("estate.property.tag", string="Tags")
+
+    # one2many
+    offer_ids = fields.One2many(
+        comodel_name="estate.property.offer", inverse_name="property_id")

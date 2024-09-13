@@ -63,6 +63,10 @@
                                 <field name="garden_orientation"/>
                             </group>
                         </page>
+                        <!-- pag offers -->
+                        <page string="Offers">
+                            <field name="offer_ids"/>
+                        </page>
                         <!-- pag other info -->
                         <page string="Other Info">
                             <group>

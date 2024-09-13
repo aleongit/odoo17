@@ -334,3 +334,113 @@ tag_ids = fields.Many2many("estate.property.tag", string="Tags")
 - add files in `tutorials/estate/__manifest__.py`
 
 
+## One2many
+
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.fields.One2many
+
+- In our real estate module, we want to define the concept of *property offers*. A *property offer* is an amount a potential buyer offers to the seller. The offer can be lower or higher than the expected price
+
+- An offer applies to one property, but the same property can have many offers. The concept of *many2one* appears once again. However, in this case we want to display the list of offers for a given property so we will use the one2many concept
+
+- A **one2many** is the inverse of a *many2one*. For example, we defined on our test model a link to the `res.partner` model thanks to the field `partner_id`. We can define the inverse relation, i.e. the list of test models linked to our partner:
+
+```
+test_ids = fields.One2many("test_model", "partner_id", string="Tests")
+```
+
+- The first parameter is called the `comodel` and the second parameter is the *field* we want to inverse.
+
+- By convention, **one2many** fields have the `_ids` suffix. They behave as a list of records, meaning that accessing the data must be done in a loop:
+
+```
+for test in partner.test_ids:
+    print(test.name)
+```
+
+- ⚠️ Because a **One2many** is a virtual relationship, there must be a **Many2one** field defined in the comodel
+
+
+## Add the Real Estate Property Offer table
+
+- Create the `estate.property.offer` model and add the following fields:
+- price (Float)
+- status (Selection) *no copy *Accepted, Refused
+- partner_id (Many2one (res.partner)) *required
+- property_id (Many2one (estate.property)) *required
+- Create a tree view and a form view with the `price`, `partner_id` and `status` fields. No need to create an action or a menu
+- add the field `offer_ids` to your `estate.property` model and in its form view
+
+- There are several important things to notice here. First, we don’t need an action or a menu for all models. Some models are intended to be accessed only through another model. This is the case in our exercise: an offer is always accessed through a property
+
+- Second, despite the fact that the `property_id` field is required, we did not include it in the views. How does Odoo know which property our offer is linked to? Well that’s part of the magic of using the Odoo framework: sometimes things are defined implicitly. When we create a record through a one2many field, the corresponding many2one is populated automatically for convenience
+
+------------------
+
+- create model in `tutorials/estate/models/estate_property_offer.py` with many2one relationship `property_id` (inverse)
+```
+# Many2one
+    property_id = fields.Many2one(
+        comodel_name='estate.property', required=True)
+``` 
+
+- add one2many field in `tutorials/estate/models/estate_property.py`
+```
+ # one2many
+    offer_ids = fields.One2many(
+        comodel_name="estate.property.offer", inverse_name="property_id")
+```
+- add model in models `tutorials/estate/models/__init__.py`
+
+- NO actions
+- No menus
+- create views in `tutorials/estate/views/estate_property_offer_views.xml`
+```
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- list -->
+    <record id="estate.property_offer_list" model="ir.ui.view">
+        <field name="name">Property Offer List</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="price" />
+                <field name="partner_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- form -->
+    <record id="estate.property_offer_form" model="ir.ui.view">
+        <field name="name">Property Offer Form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="partner_id"/>
+                        <field name="state" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- search -->
+
+</odoo>
+```
+
+- add field `offer_ids` in `tutorials/estate/views/estate_property_views.xml`
+```
+</page>
+<!-- pag offers -->
+<page string="Offers">
+    <field name="offer_ids"/>
+</page>
+```
+
+- add access in `tutorials/estate/security/ir.model.access.csv`
+- add files in `tutorials/estate/__manifest__.py`
