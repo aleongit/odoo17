@@ -61,7 +61,7 @@ INFO rd-demo odoo.modules.loading: loading estate/views/estate_property_views.xm
 ```
 <?xml version="1.0"?>
 <odoo>    <!--  -->
-    <record id="estate_property_action" model="ir.actions.act_window">
+    <record id="estate.property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
@@ -125,7 +125,7 @@ A basic menu for our test_model_action is:
 <odoo>
     <menuitem id="estate_property_menu_root" name="Real Estate">
         <menuitem id="estate_property_first_level_menu" name="Advertisements">
-            <menuitem id="estate_property_model_menu_action" action="estate_property_action"/>
+            <menuitem id="estate_property_model_menu_action" action="estate.property_action"/>
         </menuitem>
     </menuitem>
 </odoo>
