@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.tools import date_utils
+from odoo.exceptions import UserError
 
 
 class EstateProperty(models.Model):
@@ -98,3 +99,18 @@ class EstateProperty(models.Model):
             return {'warning': {
                 'title': _("Warning"),
                 'message': ("garden it's False")}}
+
+    # action methods
+    def action_set_sold(self):
+        for record in self:
+            if not record.state == 'canceled':
+                record.state = 'sold'
+                #record.write({"state": "sold"})
+        return True
+    
+    """
+        def action_sold(self):
+        if "canceled" in self.mapped("state"):
+            raise UserError("Canceled properties cannot be sold.")
+        return self.write({"state": "sold"})
+    """

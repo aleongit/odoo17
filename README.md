@@ -17,6 +17,7 @@ Checkpoints:
 - [Chapter 6: Basic Views](md/06_basic_views.md)
 - [Chapter 7: Relations Between Models](md/07_relations_between_models.md)
 - [Chapter 8: Computed Fields And Onchanges](md/08__computed_fields_and_onchanges.md)
+- [Chapter 9: Ready For Some Action?](md/09_ready_for_some_action.md)
 
 
 
