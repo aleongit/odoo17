@@ -311,3 +311,4 @@ default_productivity_apps = True
 - https://www.rosehosting.com/blog/how-to-install-odoo-17-on-ubuntu-22-04/
 - https://stackoverflow.com/questions/12720967/how-can-i-change-a-postgresql-user-password
 - https://stackoverflow.com/questions/18580066/how-to-allow-remote-access-to-postgresql-database
+- https://github.com/odoo/documentation/issues/1837

@@ -117,3 +117,66 @@ def _compute_best_price(self):
         else:
             record.best_price = 0
 ```
+
+
+## Inverse Function
+
+- You might have noticed that computed fields are *read-only* by default. This is expected since the user is not supposed to set a value
+
+- In some cases, it might be useful to still be able to set a value directly. In our real estate example, we can define a validity duration for an offer and set a validity date. We would like to be able to set either the duration or the date with one impacting the other.
+
+- To support this Odoo provides the ability to use an inverse function:
+```
+from odoo import api, fields, models
+
+class TestComputed(models.Model):
+    _name = "test.computed"
+
+    total = fields.Float(compute="_compute_total", inverse="_inverse_total")
+    amount = fields.Float()
+
+    @api.depends("amount")
+    def _compute_total(self):
+        for record in self:
+            record.total = 2.0 * record.amount
+
+    def _inverse_total(self):
+        for record in self:
+            record.amount = record.total / 2.0
+```
+
+- A **compute method** sets the field while an **inverse method** sets the field’s dependencies.
+
+- ⚠️ Note that the **inverse method** is called when saving the record, while the compute method is called at each change of its dependencies
+
+
+## Compute a validity date for offers
+
+- Add the following fields to the *estate.property.offer* model:
+- validity (Integer) *default=7
+- date_deadline (Date)
+- Where *date_deadline* is a computed field which is defined as the sum of two fields from the offer: the *create_date* and the *validity*. Define an appropriate inverse function so that the user can set either the date or the validity
+- Tip: the *create_date* is only filled in when the record is created, therefore you will need a fallback to prevent crashing at time of creation
+- Add the fields in the form view and the list view 
+
+---
+
+- **tutorials/estate/models/estate_property_offer.py**
+```
+    # computed fields / Inverse Function
+    validity = fields.Integer(string="Validity (days)", default=7)
+    date_deadline = fields.Date(
+        string="Deadline", compute="_compute_validity_date", inverse="_inverse_validity_date")
+
+    @api.depends("create_date","validity")
+    def _compute_validity_date(self):
+        for record in self:
+            date = record.create_date if record.create_date else fields.Date.today()
+            record.date_deadline = date_utils.add(date, days=record.validity)
+
+    def _inverse_validity_date(self):
+        for record in self:
+            date = record.create_date.date() if record.create_date else fields.Date.today()
+            record.validity = (record.date_deadline - date).days
+
+```
