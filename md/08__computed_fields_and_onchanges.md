@@ -266,3 +266,15 @@ from odoo import models, fields, api, _
                 'message': ("garden it's False")}}
 
 ```
+
+## How to use them?
+
+- There is no strict rule for the use of computed fields and onchanges
+
+- In many cases, both computed fields and onchanges may be used to achieve the same result. Always prefer computed fields since they are also triggered outside of the context of a form view. Never ever use an onchange to add business logic to your model. This is a very bad idea since onchanges are not automatically triggered when creating a record programmatically; they are only triggered in the form view
+
+- The usual pitfall of computed fields and onchanges is trying to be ‘too smart’ by adding too much logic. This can have the opposite result of what was expected: the end user is confused from all the automation
+
+- Computed fields tend to be easier to debug: such a field is set by a given method, so it’s easy to track when the value is set. Onchanges, on the other hand, may be confusing: it is very difficult to know the extent of an onchange. Since several onchange methods may set the same fields, it easily becomes difficult to track where a value is coming from
+
+- When using stored computed fields, pay close attention to the dependencies. When computed fields depend on other computed fields, changing a value can trigger a large number of recomputations. This leads to poor performance
