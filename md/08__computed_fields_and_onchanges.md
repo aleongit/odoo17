@@ -171,7 +171,7 @@ class TestComputed(models.Model):
     @api.depends("create_date","validity")
     def _compute_validity_date(self):
         for record in self:
-            date = record.create_date if record.create_date else fields.Date.today()
+            date = record.create_date.date() if record.create_date else fields.Date.today()
             record.date_deadline = date_utils.add(date, days=record.validity)
 
     def _inverse_validity_date(self):
