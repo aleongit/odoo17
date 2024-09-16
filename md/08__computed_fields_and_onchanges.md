@@ -180,3 +180,89 @@ class TestComputed(models.Model):
             record.validity = (record.date_deadline - date).days
 
 ```
+
+## Additional Information
+
+- ⚠️ *Computed fields* are **not stored** in the database by default. Therefore it is not possible to search on a computed field unless a search method is defined. This topic is beyond the scope of this training, so we won’t cover it
+
+- Another solution is to store the field with the `store=True` attribute. While this is usually convenient, pay attention to the potential computation load added to your model. Lets re-use our example:
+
+```
+description = fields.Char(compute="_compute_description", store=True)
+partner_id = fields.Many2one("res.partner")
+
+@api.depends("partner_id.name")
+def _compute_description(self):
+    for record in self:
+        record.description = "Test for partner %s" % record.partner_id.name
+```
+
+- Every time the partner name is changed, the description is automatically recomputed for all the records referring to it! This can quickly become prohibitive to recompute when millions of records need recomputation
+
+- It is also worth noting that a computed field can depend on another computed field. The ORM is smart enough to correctly recompute all the dependencies in the right order… but sometimes at the cost of degraded performance.
+
+- In general performance must always be kept in mind when defining computed fields. The more complex is your field to compute (e.g. with a lot of dependencies or when a computed field depends on other computed fields), the more time it will take to compute. Always take some time to evaluate the cost of a computed field beforehand. Most of the time it is only when your code reaches a production server that you realize it slows down a whole process. Not cool :-(
+
+
+## Onchanges
+
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.api.onchange
+
+- In our real estate module, we also want to help the user with data entry. When the ‘garden’ field is set, we want to give a default value for the garden area as well as the orientation. Additionally, when the ‘garden’ field is unset we want the garden area to reset to zero and the orientation to be removed. In this case, the value of a given field modifies the value of other fields
+
+- The ‘onchange’ mechanism provides a way for the client interface to update a form without saving anything to the database whenever the user has filled in a field value. To achieve this, we define a method where self represents the record in the form view and decorate it with `onchange()` to specify which field it is triggered by. Any change you make on self will be reflected on the form:
+
+```
+from odoo import api, fields, models
+
+class TestOnchange(models.Model):
+    _name = "test.onchange"
+
+    name = fields.Char(string="Name")
+    description = fields.Char(string="Description")
+    partner_id = fields.Many2one("res.partner", string="Partner")
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
+        self.name = "Document for %s" % (self.partner_id.name)
+        self.description = "Default description for %s" % (self.partner_id.name)
+```
+
+- In this example, changing the partner will also change the name and the description values. It is up to the user whether or not to change the name and description values afterwards. Also note that we do not loop on self, this is because the method is only triggered in a form view, where self is always a single record.
+
+## set on change
+
+- Set values for garden area and orientation
+- Create an onchange in the *estate.property* model in order to set values for the garden area (10) and orientation (North) when garden is set to True. When unset, clear the fields
+- Onchanges methods can also return a non-blocking warning message
+```
+@api.onchange('provider', 'check_validity')
+    def onchange_check_validity(self):
+        if self.provider == 'authorize' and self.check_validity:
+            self.check_validity = False
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ('This option is not supported for Authorize.net')}}
+```
+
+- **tutorials/estate/models/estate_property.py**
+```
+from odoo import models, fields, api, _
+...
+ # onchange
+    @api.onchange('garden')
+    def onchange_garden(self):
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = 'north'
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ("garden it's True")}}
+        else:
+            self.garden_area = None
+            self.garden_orientation = None
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ("garden it's False")}}
+
+```

@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.tools import date_utils
 
 
@@ -82,3 +82,19 @@ class EstateProperty(models.Model):
                 record.best_price = max(record.offer_ids.mapped('price'))
             else:
                 record.best_price = 0
+
+    # onchange
+    @api.onchange('garden')
+    def onchange_garden(self):
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = 'north'
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ("garden it's True")}}
+        else:
+            self.garden_area = None
+            self.garden_orientation = None
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ("garden it's False")}}
