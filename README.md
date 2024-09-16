@@ -16,6 +16,7 @@ Checkpoints:
 - [Chapter 5: Finally, Some UI To Play With](md/05_finally_some_ui_to_play_with.md)
 - [Chapter 6: Basic Views](md/06_basic_views.md)
 - [Chapter 7: Relations Between Models](md/07_relations_between_models.md)
+- [Chapter 8: Computed Fields And Onchanges](md/08__computed_fields_and_onchanges.md)
 
 
 
