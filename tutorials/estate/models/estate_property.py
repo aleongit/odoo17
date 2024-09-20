@@ -14,9 +14,11 @@ class EstateProperty(models.Model):
     )
     active = fields.Boolean(string="Active", default=True)
     state = fields.Selection(
-        string='Status',
-        selection=[('new', 'New'), ('offer_received', 'Offer Received'),
-                   ('offer_accepted', 'Offer Accepted'), ('sold ', 'Sold '),
+        string='State',
+        selection=[('new', 'New'),
+                   ('offer_received', 'Offer Received'),
+                   ('offer_accepted', 'Offer Accepted'),
+                   ('sold', 'Sold '),
                    ('canceled', 'Canceled')],
         required=True,
         copy=False,
@@ -102,10 +104,9 @@ class EstateProperty(models.Model):
 
     # action methods
     def action_set_sold(self):
-        for record in self:
-            if not record.state == 'canceled':
-                record.state = 'sold'
-                #record.write({"state": "sold"})
+        if self.state != 'canceled':
+            self.state = 'sold'
+            #record.write({"state": "sold"})
         return True
     
     """
