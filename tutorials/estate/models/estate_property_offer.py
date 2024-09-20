@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.tools import date_utils
+from odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
@@ -49,7 +50,17 @@ class EstatePropertyOffer(models.Model):
 
     # action methods
     def action_accept_offer(self):
-        return self.write({"state": "accepted"})
+        if not 'accepted' in self.property_id.offer_ids.mapped('state'):
+            self.state = 'accepted'
+            self.property_id.selling_price = self.price
+            self.property_id.buyer_id = self.partner_id
+        else:
+            raise UserError("Only 1 offer can be accepted!")
+        return True
 
     def action_refuse_offer(self):
-        return self.write({"state": "refused"})
+        if self.state == 'accepted':
+            self.property_id.selling_price = 0
+            self.property_id.buyer_id = None
+        self.state = 'refused'
+        return True
