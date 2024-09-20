@@ -65,7 +65,27 @@ Finally, a public method should always return something so that it can be called
 
 - **tutorials/estate/views/estate_property_views.xml**
 ```
+<header>
+    <button name="action_set_sold" type="object" string="Sold"/>
+    <button name="action_set_canceled" type="object" string="Canceled"/>
+</header>
 ```
 
+- **tutorials/estate/models/estate_property.py**
+```
+    def action_set_sold(self):
+        if self.state != 'canceled':
+            self.state = 'sold'
+        else:
+            raise UserError("Canceled properties cannot be sold!")
+        return True
+
+    def action_set_canceled(self):
+        if self.state != 'sold':
+            self.state = 'canceled'
+        else:
+            raise UserError("Sold properties cannot be canceled!")
+        return True
+```
 
 
