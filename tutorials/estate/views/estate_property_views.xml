@@ -29,7 +29,9 @@
             <form string="Test">
                 <!-- header buttons -->
                 <header>
+                    <!-- actions -->
                     <button name="action_set_sold" type="object" string="Sold"/>
+                    <button name="action_set_canceled" type="object" string="Canceled"/>
                 </header>
                 <sheet>
                     <h1>

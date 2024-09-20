@@ -106,9 +106,19 @@ class EstateProperty(models.Model):
     def action_set_sold(self):
         if self.state != 'canceled':
             self.state = 'sold'
-            #record.write({"state": "sold"})
+            # record.write({"state": "sold"})
+        else:
+            raise UserError("Canceled properties cannot be sold!")
         return True
-    
+
+    def action_set_canceled(self):
+        if self.state != 'sold':
+            self.state = 'canceled'
+            # record.write({"state": "sold"})
+        else:
+            raise UserError("Sold properties cannot be canceled!")
+        return True
+
     """
         def action_sold(self):
         if "canceled" in self.mapped("state"):

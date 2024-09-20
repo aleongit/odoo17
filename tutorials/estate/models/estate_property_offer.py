@@ -24,7 +24,7 @@ class EstatePropertyOffer(models.Model):
     date_deadline = fields.Date(
         string="Deadline", compute="_compute_validity_date", inverse="_inverse_validity_date")
 
-    @api.depends("create_date","validity")
+    @api.depends("create_date", "validity")
     def _compute_validity_date(self):
         """
             date = None
@@ -46,3 +46,10 @@ class EstatePropertyOffer(models.Model):
             test = (record.date_deadline - date).days
             print(test)
             record.validity = test
+
+    # action methods
+    def action_accept_offer(self):
+        return self.write({"state": "accepted"})
+
+    def action_refuse_offer(self):
+        return self.write({"state": "refused"})
