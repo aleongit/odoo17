@@ -22,15 +22,24 @@ Checkpoints:
 
 
 ## Run
-
 - `cd odoo17`
 - `source venv/bin/activate`
 - `python3 odoo-bin -c odoo.conf`
 - http://192.168.1.60:8069/
 
-- developing tutorials
+
+## Run Tutorials
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
+
+
+## Run with Debug
+- run `source .bin/debug.sh`
+- to fix connections on port
+```
+lsof -i :5678
+sudo kill -9 <process_id>
+```
 
 
 
@@ -303,6 +312,42 @@ default_productivity_apps = True
 ### Connect to Odoo with browser
 - http://192.168.1.60:8069/
 
+
+
+## Config Debug [debugpy] for VSCode
+
+- `source venv/bin/activate`
+- `pip install debugpy`
+
+- create `.bin/debug.sh`
+```
+source venv/bin/activate
+python3 /home/aleon/odoo17/venv/lib/python3.12/site-packages/debugpy --listen 0.0.0.0:5678 ./odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml
+```
+
+- create `/home/aleon/odoo17/.vscode/launch.json`
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Debugpy",
+      "type": "python",
+      "request": "attach",
+      "port": 5678,
+      "host": "localhost"
+    }
+  ]
+}
+```
+
+- run `source .bin/debug.sh`
+
+- to fix connections on port
+```
+lsof -i :5678
+sudo kill -9 <process_id>
+```
 
 
 

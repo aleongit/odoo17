@@ -52,3 +52,7 @@ package.json
 
 #venv
 /venv/
+
+#conf
+!/.bin
+!/.vscode
