@@ -9,3 +9,9 @@ class EstatePropertyType(models.Model):
         string="Name",
         required=True
     )
+
+    # sql constraints
+    _sql_constraints = [
+        ('check_property_type_name', 'UNIQUE(name)',
+         'A property type name must be unique'),
+    ]
