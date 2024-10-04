@@ -73,19 +73,19 @@ Finally, a public method should always return something so that it can be called
 
 - **tutorials/estate/models/estate_property.py**
 ```
-    def action_set_sold(self):
-        if self.state != 'canceled':
-            self.state = 'sold'
-        else:
-            raise UserError("Canceled properties cannot be sold!")
-        return True
+def action_set_sold(self):
+    if self.state != 'canceled':
+        self.state = 'sold'
+    else:
+        raise UserError("Canceled properties cannot be sold!")
+    return True
 
-    def action_set_canceled(self):
-        if self.state != 'sold':
-            self.state = 'canceled'
-        else:
-            raise UserError("Sold properties cannot be canceled!")
-        return True
+def action_set_canceled(self):
+    if self.state != 'sold':
+        self.state = 'canceled'
+    else:
+        raise UserError("Sold properties cannot be canceled!")
+    return True
 ```
 
 - Add the buttons ‘Accept’ and ‘Refuse’ to the `estate.property.offer` model
@@ -93,42 +93,42 @@ Finally, a public method should always return something so that it can be called
 - ⚠️ Pay attention: in real life only one offer can be accepted for a given property!
 - **tutorials/estate/models/estate_property_offer.py**
 ```
-    # action methods
-    def action_accept_offer(self):
-        if not 'accepted' in self.property_id.offer_ids.mapped('state'):
-            self.state = 'accepted'
-            self.property_id.selling_price = self.price
-            self.property_id.buyer_id = self.partner_id
-        else:
-            raise UserError("Only 1 offer can be accepted!")
-        return True
+# action methods
+def action_accept_offer(self):
+    if not 'accepted' in self.property_id.offer_ids.mapped('state'):
+        self.state = 'accepted'
+        self.property_id.selling_price = self.price
+        self.property_id.buyer_id = self.partner_id
+    else:
+        raise UserError("Only 1 offer can be accepted!")
+    return True
 
-    def action_refuse_offer(self):
-        if self.state == 'accepted':
-            self.property_id.selling_price = 0
-            self.property_id.buyer_id = None
-        self.state = 'refused'
-        return True
+def action_refuse_offer(self):
+    if self.state == 'accepted':
+        self.property_id.selling_price = 0
+        self.property_id.buyer_id = None
+    self.state = 'refused'
+    return True
 ```
 
 - **tutorials/estate/views/estate_property_offer_views.xml**
 ```
-    <!-- tree -->
-    <record id="estate.property_offer_list" model="ir.ui.view">
-        <field name="name">Property Offer List</field>
-        <field name="model">estate.property.offer</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="price" />
-                <field name="partner_id" />
-                <field name="validity" />
-                <field name="date_deadline" />
-                    <button name="action_accept_offer" title = "accept" type="object" icon="fa-check"/>
-                    <button name="action_refuse_offer" title = "refuse" type="object" icon="fa-times"/>
-                <field name="state" />
-            </tree>
-        </field>
-    </record>
+<!-- tree -->
+<record id="estate.property_offer_list" model="ir.ui.view">
+    <field name="name">Property Offer List</field>
+    <field name="model">estate.property.offer</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="price" />
+            <field name="partner_id" />
+            <field name="validity" />
+            <field name="date_deadline" />
+                <button name="action_accept_offer" title = "accept" type="object" icon="fa-check"/>
+                <button name="action_refuse_offer" title = "refuse" type="object" icon="fa-times"/>
+            <field name="state" />
+        </tree>
+    </field>
+</record>
 ```
 
 ## Action Type
