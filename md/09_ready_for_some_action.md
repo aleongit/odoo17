@@ -88,4 +88,54 @@ Finally, a public method should always return something so that it can be called
         return True
 ```
 
+- Add the buttons ‘Accept’ and ‘Refuse’ to the `estate.property.offer` model
+- When an offer is accepted, set the *buyer* and the *selling price* for the corresponding property
+- ⚠️ Pay attention: in real life only one offer can be accepted for a given property!
+- **tutorials/estate/models/estate_property_offer.py**
+```
+    # action methods
+    def action_accept_offer(self):
+        if not 'accepted' in self.property_id.offer_ids.mapped('state'):
+            self.state = 'accepted'
+            self.property_id.selling_price = self.price
+            self.property_id.buyer_id = self.partner_id
+        else:
+            raise UserError("Only 1 offer can be accepted!")
+        return True
 
+    def action_refuse_offer(self):
+        if self.state == 'accepted':
+            self.property_id.selling_price = 0
+            self.property_id.buyer_id = None
+        self.state = 'refused'
+        return True
+```
+
+- **tutorials/estate/views/estate_property_offer_views.xml**
+```
+    <!-- tree -->
+    <record id="estate.property_offer_list" model="ir.ui.view">
+        <field name="name">Property Offer List</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="price" />
+                <field name="partner_id" />
+                <field name="validity" />
+                <field name="date_deadline" />
+                    <button name="action_accept_offer" title = "accept" type="object" icon="fa-check"/>
+                    <button name="action_refuse_offer" title = "refuse" type="object" icon="fa-times"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+```
+
+## Action Type
+
+- In *Chapter 5: Finally, Some UI To Play With*, we created an action that was linked to a menu. You may be wondering if it is possible to link an action to a button. Good news, it is! One way to do it is:
+```
+<button type="action" name="%(test.test_model_action)d" string="My Action"/>
+```
+
+- We use `type="action"` and we refer to the *external identifier* in the `name`
