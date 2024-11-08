@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.tools import date_utils
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class EstateProperty(models.Model):
@@ -133,3 +133,13 @@ class EstateProperty(models.Model):
             raise UserError("Canceled properties cannot be sold.")
         return self.write({"state": "sold"})
     """
+
+    # python constraint
+    @api.constrains('selling_price')
+    def _check_selling_price_is_expected(self):
+        PER_CENT_EXPECTED = 0.90
+        for record in self:
+            expected_price_min = record.expected_price * PER_CENT_EXPECTED
+            if record.selling_price < expected_price_min and record.selling_price > 0:
+                raise ValidationError(f"The selling price must be at least {PER_CENT_EXPECTED:.2%} of the expected price!")
+        # all records passed the test, don't return anything

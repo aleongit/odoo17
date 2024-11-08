@@ -70,3 +70,4 @@ class EstatePropertyOffer(models.Model):
             self.property_id.buyer_id = None
         self.state = 'refused'
         return True
+    
