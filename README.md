@@ -24,14 +24,28 @@ Checkpoints:
 
 ## Run
 - `cd odoo17`
-- `source venv/bin/activate`
-- `python3 odoo-bin -c odoo.conf`
+- `source venv/bin/activate` or `. venv/bin/activate`
+- `python3 odoo-bin -c odoo.conf` or `./odoo-bin -c odoo.conf`
 - http://192.168.1.60:8069/
 
 
 ## Run Tutorials
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
+or
+- `./odoo-bin -c odoo.conf` if configure params in **odoo.conf**
+```
+[options]
+; This is the password that allows database operations:
+; admin_passwd = admin
+db_host = False
+db_port = False
+db_user = aleon
+;db_password = 
+db_name = rd-demo
+addons_path = addons/, custom/, tutorials/
+default_productivity_apps = True
+```
 
 
 ## Run with Debug
@@ -41,7 +55,6 @@ Checkpoints:
 lsof -i :5678
 sudo kill -9 <process_id>
 ```
-
 
 
 ## Requeriments / Prerequisites
