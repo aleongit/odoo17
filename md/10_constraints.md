@@ -74,3 +74,34 @@ _sql_constraints = [
         'A property tag name must be unique'),
 ]
 ```
+
+
+## Python
+
+- Reference: the documentation related to this topic can be found in **constrains()**
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.api.constrains
+
+- *Goal*: at the end of this section, it will not be possible to accept an offer lower than 90% of the expected price
+
+- SQL constraints are an *efficient way* of ensuring data consistency. However it may be necessary to make more complex checks which require Python code. In this case we need a Python constraint
+
+- A Python constraint is defined as a method decorated with **constrains(**) and is invoked on a recordset. The decorator specifies which fields are involved in the constraint. The constraint is automatically evaluated when any of these fields are modified . The method is expected to raise an exception if its invariant is not satisfied:
+```
+from odoo.exceptions import ValidationError
+
+...
+
+@api.constrains('date_end')
+def _check_date_end(self):
+    for record in self:
+        if record.date_end < fields.Date.today():
+            raise ValidationError("The end date cannot be set in the past")
+    # all records passed the test, don't return anything
+```
+
+- *Exercise*: Add Python constraints.
+- Add a constraint so that the selling price cannot be lower than 90% of the expected price
+- *Tip*: the selling price is zero until an offer is validated. You will need to fine tune your check to take this into account
+- ⚠️ Always use the `float_compare()` and `float_is_zero()` methods from `odoo.tools.float_utils` when working with floats!
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.fields.Float
+- Ensure the constraint is triggered every time the selling price or the expected price is changed!
