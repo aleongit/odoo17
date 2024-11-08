@@ -34,6 +34,7 @@ Checkpoints:
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
 or
 - `./odoo-bin -c odoo.conf` if configure params in **odoo.conf**
+- **odoo.conf**
 ```
 [options]
 ; This is the password that allows database operations:
