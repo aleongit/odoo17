@@ -105,3 +105,16 @@ def _check_date_end(self):
 - ⚠️ Always use the `float_compare()` and `float_is_zero()` methods from `odoo.tools.float_utils` when working with floats!
 - https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#odoo.fields.Float
 - Ensure the constraint is triggered every time the selling price or the expected price is changed!
+
+- **tutorials/estate/models/estate_property.py**
+```
+    # python constraint
+    @api.constrains('selling_price')
+    def _check_selling_price_is_expected(self):
+        PER_CENT_EXPECTED = 0.90
+        for record in self:
+            expected_price_min = record.expected_price * PER_CENT_EXPECTED
+            if record.selling_price < expected_price_min and record.selling_price > 0:
+                raise ValidationError(f"The selling price must be at least {PER_CENT_EXPECTED:.2%} of the expected price!")
+        # all records passed the test, don't return anything
+```
