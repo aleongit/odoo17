@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "descripció del model propietat immobilària"
+    _order = "id desc"
 
     # reserved fields (name, active, state)
     name = fields.Char(
