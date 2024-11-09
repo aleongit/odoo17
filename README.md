@@ -19,21 +19,24 @@ Checkpoints:
 - [Chapter 8: Computed Fields And Onchanges](md/08__computed_fields_and_onchanges.md)
 - [Chapter 9: Ready For Some Action?](md/09_ready_for_some_action.md)
 - [Chapter 10: Constraints](md/10_constraints.md)
+- [Chapter 11: Add The Sprinkles](md/11_add_the_sprinklesy.md)
 
 
 
 ## Run
 - `cd odoo17`
-- `source venv/bin/activate` or `. venv/bin/activate`
-- `python3 odoo-bin -c odoo.conf` or `./odoo-bin -c odoo.conf`
+- `source venv/bin/activate` 
+- or `. venv/bin/activate`
+- `python3 odoo-bin -c odoo.conf` 
+- or `./odoo-bin -c odoo.conf`
 - http://192.168.1.60:8069/
 
 
 ## Run Tutorials
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
-or
-- `./odoo-bin -c odoo.conf` if configure params in **odoo.conf**
+- or `./odoo-bin -c odoo.conf` if configure params in **odoo.conf**
+
 - **odoo.conf**
 ```
 [options]
