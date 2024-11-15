@@ -217,4 +217,26 @@ class EstatePropertyType(models.Model):
 ...
 ```
 
+### View
+
+- Ordering is possible at the model level
+- This has the advantage of a consistent order everywhere a list of records is retrieved
+- However, it is also possible to define a specific order directly in a view thanks to the `default_order` attribute
+
+
+### Manual
+
+- Both model and view ordering allow flexibility when sorting records, but there is still one case we need to cover: the manual ordering
+- A user may want to sort records depending on the business logic
+- For example, in our real estate module we would like to sort the property types manually
+- It is indeed useful to have the most used types appear at the top of the list
+- If our real estate agency mainly sells houses, it is more convenient to have *House* appear before *Apartment*
+- To do so, a `sequence` field is used in combination with the `handle` widget
+- Obviously the `sequence` field must be the first field in the `_order` attribute
+
+
+- **Exercise**: Add manual ordering
+- Add the following field in `estate.property.type`:
+- `Sequence` (Integer)
+- Add the sequence to the `estate.property.type` list view with the correct widget
 
