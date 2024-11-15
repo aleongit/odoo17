@@ -10,8 +10,8 @@ class EstatePropertyType(models.Model):
         string="Name",
         required=True
     )
-
     property_ids = fields.One2many("estate.property", "property_type_id")
+    sequence = fields.Integer('Sequence', default=1, help="Used to order types")
 
     # sql constraints
     _sql_constraints = [
