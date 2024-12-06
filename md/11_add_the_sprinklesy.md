@@ -261,3 +261,115 @@ class EstatePropertyType(models.Model):
             </tree>
 ...
 ```
+
+## Attributes and options
+
+- It would be prohibitive to detail all the available features which allow fine tuning of the look of a view
+
+
+### Form
+
+- **Goal**: at the end of this section, the property form view will have:
+- Conditional display of buttons and fields
+- Tag colors
+
+- In our real estate module, we want to modify the behavior of some fields
+- For example, we don’t want to be able to create or edit a property type from the form view
+- Instead we expect the types to be handled in their appropriate menu
+- We also want to give tags a color. In order to add these behavior customizations, we can add the **options** attribute to several field widgets
+
+- **Exercise**: Add widget options
+- Add the appropriate option to the *property_type_id* field to prevent the creation and the editing of a property type from the property form view
+- Have a look at the Many2one widget documentation for more info
+- Add the following field:
+- *Color* (Integer) in *estate.property.tag* model
+- Then add the appropriate option to the *tag_ids* field to add a color picker on the tags
+- Have a look at the *FieldMany2ManyTags* widget documentation for more info
+- https://www.odoo.com/documentation/17.0/developer/reference/frontend/javascript_reference.html#reference-js-widgets
+
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+...
+<field name="property_type_id" options="{'no_create': true, 'no_open': true}"/>
+```
+
+
+- **tutorials/estate/models/estate_property_tag.py**
+```
+class EstatePropertyTag(models.Model):
+    _name = "estate.property.tag"
+...
+    color = fields.Integer(string='Color')
+```
+
+- In *Chapter 5: Finally, Some UI To Play With*, we saw that reserved fields were used for specific behaviors
+- For example, the active field is used to automatically filter out inactive records
+- We added the state as a reserved field as well
+- It’s now time to use it! A state field can be used in combination with an invisible attribute in the view to display buttons conditionally
+
+
+- **Exercise**: Add conditional display of buttons
+- Use the *invisible* attribute to display the header buttons conditionally as depicted in this section’s Goal (notice how the ‘Sold’ and ‘Cancel’ buttons change when the state is modified).
+- *Tip*: do not hesitate to search for invisible= in the Odoo XML files for some examples
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<button name="action_set_sold" type="object" string="Sold" 
+    invisible="state in ('sold', 'canceled')"/>
+
+<button name="action_set_canceled" type="object" string="Canceled" 
+    invisible="state in ('sold', 'canceled')"/>
+```
+
+- More generally, it is possible to make a field *invisible*, *readonly* or *required* based on the value of other fields
+- Note that *invisible* can also be applied to other elements of the view such as *button* or *group*
+
+- *invisible*, *readonly* and *required* can have any Python expression as value
+- The expression gives the condition in which the property applies. For example:
+```
+<form>
+    <field name="description" invisible="not is_partner"/>
+    <field name="is_partner" invisible="True"/>
+</form>
+```
+
+- This means that the *description* field is *invisible* when *is_partner* is *False*
+- It is important to note that a field used in *invisible* **must** be present in the view
+- If it should not be displayed to the user, we can use the *invisible* attribute to hide it
+
+- **Exercise**: Use invisible
+- Make the garden area and orientation invisible in the *estate.property* form view when there is no garden
+- Make the ‘Accept’ and ‘Refuse’ buttons invisible once the offer state is set
+- Do not allow adding an offer when the property state is ‘Offer Accepted’, ‘Sold’ or ‘Canceled’. To do this use the *readonly* attribute
+- ⚠️ **Warning**
+- Using a (conditional) *readonly* attribute in the view can be useful to prevent data entry errors, but keep in mind that it doesn’t provide any level of security! There is no check done server-side, therefore it’s always possible to write on the field through a RPC call
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<page string="Description">
+    <group>
+...
+        <field name="garden"/>
+        <field name="garden_area" string="Garden Area (sqm)" invisible="not garden"/>
+        <field name="garden_orientation" invisible="not garden"/>
+...
+    </group>
+</page>
+...
+<page string="Offers">
+    <field name="offer_ids" 
+        readonly="state in ('offer_accepted', 'sold', 'canceled')"/>
+</page>
+```
+
+- **tutorials/estate/views/estate_property_offer_views.xml**
+```
+<tree>
+...
+    <button name="action_accept_offer" title = "accept" type="object" icon="fa-check" invisible="state"/>
+    <button name="action_refuse_offer" title = "refuse" type="object" icon="fa-times" invisible="state"/>
+...
+</tree>
+```
