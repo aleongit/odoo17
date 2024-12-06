@@ -61,6 +61,7 @@ class EstatePropertyOffer(models.Model):
             self.state = 'accepted'
             self.property_id.selling_price = self.price
             self.property_id.buyer_id = self.partner_id
+            self.property_id.state = 'offer_accepted'
         else:
             raise UserError("Only 1 offer can be accepted!")
         return True
@@ -70,5 +71,6 @@ class EstatePropertyOffer(models.Model):
             self.property_id.selling_price = 0
             self.property_id.buyer_id = None
         self.state = 'refused'
+        if not 'accepted' in self.property_id.offer_ids.mapped('state'):
+            self.property_id.state = 'offer_received'
         return True
-    

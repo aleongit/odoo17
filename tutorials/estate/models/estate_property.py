@@ -101,15 +101,15 @@ class EstateProperty(models.Model):
         if self.garden:
             self.garden_area = 10
             self.garden_orientation = 'north'
-            return {'warning': {
-                'title': _("Warning"),
-                'message': ("garden it's True")}}
+            # return {'warning': {
+            #     'title': _("Warning"),
+            #     'message': ("garden it's True")}}
         else:
             self.garden_area = None
             self.garden_orientation = None
-            return {'warning': {
-                'title': _("Warning"),
-                'message': ("garden it's False")}}
+            # return {'warning': {
+            #     'title': _("Warning"),
+            #     'message': ("garden it's False")}}
 
     # action methods
     def action_set_sold(self):
