@@ -240,3 +240,24 @@ class EstatePropertyType(models.Model):
 - `Sequence` (Integer)
 - Add the sequence to the `estate.property.type` list view with the correct widget
 
+
+- **tutorials/estate/models/estate_property_type.py**
+```
+class EstatePropertyType(models.Model):
+    _name = "estate.property.type"
+...
+    sequence = fields.Integer('Sequence', default=1, help="Used to order types")
+...
+```
+
+- **tutorials/estate/views/estate_property_type_views.xml**
+```
+...
+    <record id="estate.property_type_list" model="ir.ui.view">
+...
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" string="Type" />
+            </tree>
+...
+```
