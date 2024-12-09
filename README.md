@@ -4,6 +4,7 @@ Checkpoints:
 
 - install Odoo 17 on-premise with Source install on Ubuntu Server 24.04.1 LTS
 - Odoo 17 tutorials: Server framework 101
+- Add AEODOO training of Odoo 17
 
 
 ## Tutorial - Server framework 101
@@ -47,7 +48,7 @@ db_port = False
 db_user = aleon
 ;db_password = 
 db_name = rd-demo
-addons_path = addons/, custom/, tutorials/
+addons_path = addons/, custom/, tutorials/, cursaeodoo/
 default_productivity_apps = True
 ```
 
@@ -59,6 +60,12 @@ default_productivity_apps = True
 lsof -i :5678
 sudo kill -9 <process_id>
 ```
+
+## AEODOO Training
+- active `veterinary_clinic` and `veterinary_clinic_sale` modules
+- add Veterinary Clinic `Manager` group in current admin user
+- (Settings / Users / User / Other / Veterinary Clinic)
+
 
 
 ## Requeriments / Prerequisites
