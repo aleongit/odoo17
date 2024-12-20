@@ -373,3 +373,109 @@ class EstatePropertyTag(models.Model):
 ...
 </tree>
 ```
+
+### List
+
+- **Goal**: at the end of this section, the property and offer list views should have color decorations
+- Additionally, offers and tags will be editable directly in the list, and the availability date will be hidden by default
+
+---
+
+- When the model only has a few fields, it can be useful to edit records directly through the list view and not have to open the form view
+- In the real estate example, there is no need to open a form view to add an offer or create a new tag
+- This can be achieved thanks to the `editable` attribute
+
+---
+
+- **Exercise**: Make list views editable
+- Make the `estate.property.offer` and `estate.property.tag` list views editable
+
+- **tutorials/estate/views/estate_property_offer_views.xml**
+```
+...
+<record id="estate.property_offer_list" model="ir.ui.view">
+    <field name="name">Property Offer List</field>
+    <field name="model">estate.property.offer</field>
+    <field name="arch" type="xml">
+        <tree editable="top">
+...
+```
+
+- On the other hand, when a model has a lot of fields it can be tempting to add too many fields in the list view and make it unclear
+- An alternative method is to add the fields, but make them optionally hidden
+- This can be achieved thanks to the `optional` attribute
+
+---
+
+- **Exercise**: Make a field optional
+- Make the field `date_availability` on the `estate.property` list view optional and hidden by default
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<record id="estate.property_list" model="ir.ui.view">
+    <field name="name">Property List</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <tree>
+...
+            <field name="date_availability" string="Available From" optional="hide"/>
+...
+```
+
+- Finally, color codes are useful to visually emphasize records
+- For example, in the real estate module we would like to display refused offers in red and accepted offers in green
+- This can be achieved thanks to the `decoration-{$name}` attribute (see Fields for a complete list):
+- https://www.odoo.com/documentation/17.0/developer/reference/frontend/javascript_reference.html#reference-js-widgets
+
+
+```
+<tree decoration-success="is_partner==True">
+    <field name="name"/>
+    <field name="is_partner" invisible="1"/>
+</tree>
+```
+- The records where `is_partner` is `True` will be displayed in green
+
+---
+
+- **Exercise**: Add some decorations
+- On the `estate.property` list view:
+- Properties with an offer received are green
+- Properties with an offer accepted are green and bold
+- Properties sold are muted
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<record id="estate.property_list" model="ir.ui.view">
+    <field name="name">Property List</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <tree 
+            decoration-success="state in ('offer_received','offer_accepted')"
+            decoration-bf="state == 'offer_accepted'"
+            decoration-muted="state == 'sold'"
+        >
+```
+
+- On the `estate.property.offer` list view:
+- Refused offers are red
+- Accepted offers are green
+- The state should not be visible anymore
+
+- **Tips**:
+- Keep in mind that all fields used in attributes must be in the view!
+- If you want to test the color of the “Offer Received” and “Offer Accepted” states, add the field in the form view and change it manually (we’ll implement the business logic for this later)
+
+- **tutorials/estate/views/estate_property_offer_views.xml**
+```
+<record id="estate.property_offer_list" model="ir.ui.view">
+    <field name="name">Property Offer List</field>
+    <field name="model">estate.property.offer</field>
+    <field name="arch" type="xml">
+        <tree editable="top" 
+            decoration-danger="state == 'refused'"
+            decoration-success="state == 'accepted'">
+...
+            <field name="state" invisible="1" optional="hide" />
+...
+```
