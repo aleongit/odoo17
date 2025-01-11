@@ -557,7 +557,108 @@ class EstatePropertyTag(models.Model):
 </record>
 ```
 
+## Stat Buttons
 
+- **Goal**: at the end of this section, there will be a stat button on the property type form view which shows the list of all offers related to properties of the given type when it is clicked on
+
+- If you've already used some functional modules in Odoo, you've probably already encountered a *stat button*
+- These buttons are displayed on the top right of a form view and give a quick access to linked documents
+- In our real estate module, we would like to have a quick link to the offers related to a given property type as depicted in the Goal of this section
+
+- At this point of the tutorial we have already seen most of the concepts to do this
+- However, there is not a single solution and it can still be confusing if you don't know where to start from
+- We'll describe a step-by-step solution in the exercise
+- It can always be useful to find some examples in the Odoo codebase by looking for *oe_stat_button*
+
+- The exercise introduces the concept of *Related fields*
+- The easiest way to understand it is to consider it as a specific case of a computed field
+- The following definition of the description field:
+```
+partner_id = fields.Many2one("res.partner", string="Partner")
+description = fields.Char(related="partner_id.name")
+```
+
+- is equivalent to:
+```
+partner_id = fields.Many2one("res.partner", string="Partner")
+description = fields.Char(compute="_compute_description")
+
+@api.depends("partner_id.name")
+def _compute_description(self):
+    for record in self:
+        record.description = record.partner_id.name
+```
+- Every time the partner name is changed, the description is modified
+
+- **Exercise**: Add a stat button to property type
+- Add the field `property_type_id` to `estate.property.offer`
+- We can define it as a *related field* on `property_id.property_type_id` and set it as stored
+- Thanks to this field, an offer will be linked to a property type when it`s created
+- You can add the field to the list view of offers to make sure it works.
+- Add the field `offer_ids` to `estate.property.type` which is the *One2many* inverse of the field defined in the previous step
+- Add the field `offer_count` to `estate.property.type`
+- It is a computed field that counts the number of offers for a given property type (use `offer_ids` to do so)
+- At this point, you have all the information necessary to know how many offers are linked to a property type
+- When in doubt, add `offer_ids` and `offer_count` directly to the view
+- The next step is to display the list when clicking on the stat button
+- Create a *stat button* on `estate.property.type` pointing to the `estate.property.offer`action
+- This means you should use the `type="action"` attribute
+- At this point, clicking on the stat button should display all offers
+- We still need to filter out the offers
+- On the `estate.property.offer` action, add a *domain* that defines `property_type_id` as equal to the `active_id` (= the current record)
+
+---
+
+- **tutorials/estate/models/estate_property_offer.py**
+```
+property_type_id = fields.Many2one(
+    comodel_name='estate.property.type',
+    related='property_id.property_type_id',
+    string="Property Type", store=True)
+```
+
+- **tutorials/estate/models/estate_property_type.py**
+```
+offer_ids = fields.One2many(
+        comodel_name='estate.property.offer',
+        inverse_name='property_type_id')
+
+offer_count = fields.Integer(
+    string='Offer Count', compute='_compute_offer_count')
+
+# computed fields
+def _compute_offer_count(self):
+    for record in self:
+        record.offer_count = len(record.offer_ids)
+
+# actions
+def action_view_offers(self):
+    return {
+        'type': 'ir.actions.act_window',
+        'name': 'Offers',
+        'res_model': 'estate.property.offer',
+        'view_mode': 'tree,form',
+        'domain': [('property_type_id', '=', self.id)],
+    }
+```
+
+- **tutorials/estate/views/estate_property_type_views.xml**
+```
+<record id="estate.property_type_form" model="ir.ui.view">
+    <field name="name">Property Type Form</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+        <form string="Test">
+            <sheet>
+                <!-- action view with count -->
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="object" name="action_view_offers"
+                        icon="fa-tag" invisible="offer_count == 0">
+                        <field string="Offer Count" name="offer_count" widget="statinfo"/>
+                    </button>
+                </div>
+...
+```
 
 
 
