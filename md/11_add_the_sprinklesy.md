@@ -479,3 +479,90 @@ class EstatePropertyTag(models.Model):
             <field name="state" invisible="1" optional="hide" />
 ...
 ```
+
+### Search
+
+- **Reference**: the documentation related to this section can be found in *Search* and *Search defaults*
+- https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_architectures.html#reference-view-architectures-search
+- https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_architectures.html#reference-view-architectures-search-defaults
+
+---
+
+- **Goal**: at the end of this section, the available properties will be filtered by default, and searching on the living area returns results where the area is larger than the given number
+
+- Last but not least, there are some tweaks we would like to apply when searching
+- First of all, we want to have our *Available* filter applied by default when we access the properties
+- To make this happen, we need to use the `search_default_{$name}` action context, where `{$name}` is the filter name
+- This means that we can define which filter(s) will be activated by default at the action level
+
+---
+
+- **Exercise**: Add a default filter
+- Make the *Available* filter selected by default in the `estate.property` action
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<record id="estate.property_search" model="ir.ui.view">
+    <field name="name">estate.property.search</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <search string="Busca...">
+...
+            <filter string="Available" name="available" domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
+...
+        </search>
+    </field>
+</record>
+```
+
+- **tutorials/estate/views/estate_actions.xml**
+```
+<record id="estate.property_action" model="ir.actions.act_window">
+    <field name="name">Properties</field>
+    <field name="res_model">estate.property</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'search_default_available': True }</field>
+</record>
+```
+
+- Another useful improvement in our module would be the ability to search efficiently by living area
+- In practice, a user will want to search for properties of ‘at least’ the given area
+- It is unrealistic to expect users would want to find a property of an exact living area. It is always possible to make a custom search, but that’s inconvenient
+
+- Search view `<field>` elements can have a `filter_domain` that overrides the domain generated for searching on the given field. In the given domain, `self` represents the value entered by the user. In the example below, it is used to search on both `name` and `description` fields
+
+```
+<search string="Test">
+    <field name="description" string="Name and description"
+           filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
+</search>
+```
+
+- **Exercise**: Change the living area search.
+- Add a `filter_domain` to the living area to include properties with an area equal to or greater than the given value
+
+- **tutorials/estate/views/estate_property_views.xml**
+```
+<record id="estate.property_search" model="ir.ui.view">
+    <field name="name">estate.property.search</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <search string="Busca...">
+...
+            <field name="living_area" string="Living Area (sqm)"
+                filter_domain="[('living_area', '>=', self)]"/>
+...
+        </search>
+    </field>
+</record>
+```
+
+
+
+
+
+
+
+
+
+
