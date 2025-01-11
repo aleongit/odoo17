@@ -20,6 +20,10 @@ class EstatePropertyOffer(models.Model):
         comodel_name='res.partner', string="Partner", required=True)
     property_id = fields.Many2one(
         comodel_name='estate.property', required=True)
+    property_type_id = fields.Many2one(
+        comodel_name='estate.property.type',
+        related='property_id.property_type_id',
+        string="Property Type", store=True)
 
     # computed fields / Inverse Function
     validity = fields.Integer(string="Validity (days)", default=7)

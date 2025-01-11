@@ -20,6 +20,13 @@
         <field name="arch" type="xml">
             <form string="Test">
                 <sheet>
+                    <!-- action view with count -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_offers"
+                            icon="fa-tag" invisible="offer_count == 0">
+                            <field string="Offer Count" name="offer_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <h1>
                         <field name="name"/>
                     </h1>
@@ -50,6 +57,5 @@
             </search>
         </field>
     </record>
-
 
 </odoo>
