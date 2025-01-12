@@ -78,3 +78,16 @@ class EstatePropertyOffer(models.Model):
         if not 'accepted' in self.property_id.offer_ids.mapped('state'):
             self.property_id.state = 'offer_received'
         return True
+
+    # CRUD
+    @api.model
+    def create(self, vals):
+        property = self.env['estate.property'].browse(vals['property_id'])
+        if property.state in ('offer_accepted', 'sold', 'canceled'):
+            raise UserError(
+                'It is not allowed to create offers if the property has an accepted offer, is sold or cancelled')
+        if vals['price'] <= property.best_price:
+            raise UserError(f'The offer must be higher than {
+                            property.best_price}')
+        property.state = 'offer_received'
+        return super(EstatePropertyOffer, self).create(vals)

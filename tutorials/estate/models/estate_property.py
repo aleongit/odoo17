@@ -144,3 +144,11 @@ class EstateProperty(models.Model):
             if record.selling_price < expected_price_min and record.selling_price > 0:
                 raise ValidationError(f"The selling price must be at least {PER_CENT_EXPECTED:.2%} of the expected price!")
         # all records passed the test, don't return anything
+
+    # CRUD
+    def unlink(self):
+        for record in self:
+            if record.state not in ('new', 'canceled'):
+                raise UserError('Only new or cancelled properties can be deleted')
+        return super().unlink()
+
