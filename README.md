@@ -21,6 +21,7 @@ Checkpoints:
 - [Chapter 9: Ready For Some Action?](md/09_ready_for_some_action.md)
 - [Chapter 10: Constraints](md/10_constraints.md)
 - [Chapter 11: Add The Sprinkles](md/11_add_the_sprinklesy.md)
+- [Chapter 12: Inheritance](md/12_inheritance.md)
 
 
 
