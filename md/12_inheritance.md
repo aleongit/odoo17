@@ -94,3 +94,153 @@ def create(self, vals):
     property.state = 'offer_received'
     return super(EstatePropertyOffer, self).create(vals)
 ```
+
+## Model Inheritance
+
+- **Reference**: the documentation related to this topic can be found in Inheritance and extension
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#reference-orm-inheritance
+
+- In our real estate module, we would like to display the list of properties linked to a salesperson directly in the Settings / Users & Companies / Users form view
+- To do this, we need to add a field to the `res.users` model and adapt its view to show it
+- Odoo provides two inheritance mechanisms to extend an existing model in a modular way
+
+The first inheritance mechanism allows modules to modify the behavior of a model defined in an another module by:
+- adding fields to the model
+- overriding the definition of fields in the model
+- adding constraints to the model
+- adding methods to the model
+- overriding existing methods in the model
+
+The second inheritance mechanism (delegation) allows every record of a model to be linked to a parent model’s record and provides transparent access to the fields of this parent record
+
+![Screenshot](../md/inheritance_methods.png)
+
+- In Odoo, the first mechanism is by far the most used
+- In our case, we want to add a field to an existing model, which means we will use the first mechanism. For example:
+```
+from odoo import fields, models
+
+class InheritedModel(models.Model):
+    _inherit = "inherited.model"
+
+    new_field = fields.Char(string="New Field")
+```
+
+- By convention, each inherited model is defined in its own Python file
+- In our example, it would be `models/inherited_model.py`
+
+---
+
+- **Exercise**: Add a field to Users
+- Add the following field to `res.users`:
+- *Field*: property_ids
+- *Type*: One2many inverse of the field that references the salesperson in `estate.property`
+- Add a *domain* to the field so it only lists the available properties
+
+- **tutorials/estate/models/res_users.py**
+```
+from odoo import fields, models
+
+
+class ResUsers(models.Model):
+
+    _inherit = 'res.users'
+
+    # one2many
+    property_ids = fields.One2many(
+        comodel_name='estate.property', inverse_name='salesperson_id',
+        domain=[('state', 'in', ['new', 'offer_received'])])
+```
+
+## View Inheritance
+
+- **Reference**: the documentation related to this topic can be found in Inheritance
+- https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_records.html#reference-view-records-inheritance
+
+---
+
+- **Goal**: at the end of this section, the list of available properties linked to a salesperson should be displayed in their user form view
+- Instead of modifying existing views in place (by overwriting them), Odoo provides view inheritance where children ‘extension’ views are applied on top of root views
+- These extension can both add and remove content from their parent view
+- An extension view references its parent using the `inherit_id` field
+- Instead of a single view, its `arch` field contains a number of `xpath` elements that select and alter the content of their parent view:
+
+```
+<record id="inherited_model_view_form" model="ir.ui.view">
+    <field name="name">inherited.model.form.inherit.test</field>
+    <field name="model">inherited.model</field>
+    <field name="inherit_id" ref="inherited.inherited_model_view_form"/>
+    <field name="arch" type="xml">
+        <!-- find field description and add the field
+             new_field after it -->
+        <xpath expr="//field[@name='description']" position="after">
+          <field name="new_field"/>
+        </xpath>
+    </field>
+</record>
+```
+
+- **expr**
+An XPath expression selecting a single element in the parent view. Raises an error if it matches no element or more than one
+
+- **position**
+Operation to apply to the matched element:
+
+- **inside**
+appends `xpath`’s body to the end of the matched element
+
+- **replace**
+replaces the matched element with the `xpath`’s body, replacing any `$0` node occurrence in the new body with the original element
+
+- **before**
+inserts the `xpath`’s body as a sibling before the matched element
+
+- **after**
+inserts the `xpath`’s body as a sibling after the matched element
+
+- **attributes**
+alters the attributes of the matched element using the special `attribute` elements in the `xpath`’s body
+
+---
+
+- When matching a single element, the `position` attribute can be set directly on the element to be found
+- Both inheritances below have the same result
+
+```
+<xpath expr="//field[@name='description']" position="after">
+    <field name="idea_ids" />
+</xpath>
+
+<field name="description" position="after">
+    <field name="idea_ids" />
+</field>
+```
+
+---
+
+- **Exercise**: Add fields to the Users view
+- Add the `property_ids` field to the `base.view_users_form` in a new notebook page
+
+- **tutorials/estate/views/res_users_views.xml**
+```
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.view.form.inherit.estate.property</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='preferences']" position="after">
+                    <page name="estate_properties" string="Real Estate Properties">
+                        <field name="property_ids"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+```
+
