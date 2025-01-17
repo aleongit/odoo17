@@ -381,6 +381,7 @@ sudo kill -9 <process_id>
 
 ## Doc
 - https://www.odoo.com/documentation/17.0/administration/on_premise/source.html
+- https://www.odoo.com/documentation/17.0/contributing/development/coding_guidelines.html
 - https://www.cybrosys.com/blog/how-to-install-odoo-17-on-ubuntu-20-04-lts-server
 - https://www.rosehosting.com/blog/how-to-install-odoo-17-on-ubuntu-22-04/
 - https://stackoverflow.com/questions/12720967/how-can-i-change-a-postgresql-user-password
