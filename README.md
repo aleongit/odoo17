@@ -22,6 +22,7 @@ Checkpoints:
 - [Chapter 10: Constraints](md/10_constraints.md)
 - [Chapter 11: Add The Sprinkles](md/11_add_the_sprinklesy.md)
 - [Chapter 12: Inheritance](md/12_inheritance.md)
+- [Chapter 13: Interact With Other Modules](md/13_interact_with_other_modules.md)
 
 
 
