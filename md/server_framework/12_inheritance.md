@@ -1,4 +1,4 @@
-# Chapter 11: Inheritance
+# Chapter 12: Inheritance
 
 https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101/12_inheritance.html
 
@@ -113,7 +113,7 @@ The first inheritance mechanism allows modules to modify the behavior of a model
 
 The second inheritance mechanism (delegation) allows every record of a model to be linked to a parent model’s record and provides transparent access to the fields of this parent record
 
-![Screenshot](../md/inheritance_methods.png)
+![Screenshot](../md/server_framework/inheritance_methods.png)
 
 - In Odoo, the first mechanism is by far the most used
 - In our case, we want to add a field to an existing model, which means we will use the first mechanism. For example:
