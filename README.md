@@ -4,7 +4,9 @@ Checkpoints:
 
 - install Odoo 17 on-premise with Source install on Ubuntu Server 24.04.1 LTS
 - Odoo 17 tutorials: Server framework 101
-- Add AEODOO training of Odoo 17
+- Odoo 17 tutorials: Discover the web framework
+- **TODO:** Odoo 17 tutorials: Master the web framework
+- AEODOO training of Odoo 17
 
 
 ## Tutorial - Server framework 101
@@ -25,6 +27,12 @@ Checkpoints:
 - [Chapter 13: Interact With Other Modules](md/server_framework/13_interact_with_other_modules.md)
 - [Chapter 14: A Brief History Of QWeb](md/server_framework/14_a_brief_history_of_qweb.md)
 - [Chapter 15: The final word](md/server_framework/15_the_final_word.md)
+
+
+
+## Tutorial - Discover the web framework
+
+- [Setup](md/discover_web_framework/0_setup.md)
 
 
 
