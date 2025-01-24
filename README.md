@@ -9,22 +9,22 @@ Checkpoints:
 
 ## Tutorial - Server framework 101
 
-- [Setup guide](md/0_setup.md)
-- [Chapter 1: Architecture Overview](md/01_architecture_overview.md)
-- [Chapter 2: A New Application](md/02_a_new_application.md)
-- [Chapter 3: Models And Basic Fields](md/03_models_and_basic_fields.md)
-- [Chapter 4: Security - A Brief Introduction](md/04_security_a_brief_introduction.md)
-- [Chapter 5: Finally, Some UI To Play With](md/05_finally_some_ui_to_play_with.md)
-- [Chapter 6: Basic Views](md/06_basic_views.md)
-- [Chapter 7: Relations Between Models](md/07_relations_between_models.md)
-- [Chapter 8: Computed Fields And Onchanges](md/08__computed_fields_and_onchanges.md)
-- [Chapter 9: Ready For Some Action?](md/09_ready_for_some_action.md)
-- [Chapter 10: Constraints](md/10_constraints.md)
-- [Chapter 11: Add The Sprinkles](md/11_add_the_sprinklesy.md)
-- [Chapter 12: Inheritance](md/12_inheritance.md)
-- [Chapter 13: Interact With Other Modules](md/13_interact_with_other_modules.md)
-- [Chapter 14: A Brief History Of QWeb](md/14_a_brief_history_of_qweb.md)
-- [Chapter 15: The final word](md/15_the_final_word.md)
+- [Setup guide](md/server_framework/0_setup.md)
+- [Chapter 1: Architecture Overview](md/server_framework/01_architecture_overview.md)
+- [Chapter 2: A New Application](md/server_framework/02_a_new_application.md)
+- [Chapter 3: Models And Basic Fields](md/server_framework/03_models_and_basic_fields.md)
+- [Chapter 4: Security - A Brief Introduction](md/server_framework/04_security_a_brief_introduction.md)
+- [Chapter 5: Finally, Some UI To Play With](md/server_framework/05_finally_some_ui_to_play_with.md)
+- [Chapter 6: Basic Views](md/server_framework/06_basic_views.md)
+- [Chapter 7: Relations Between Models](md/server_framework/07_relations_between_models.md)
+- [Chapter 8: Computed Fields And Onchanges](md/server_framework/08__computed_fields_and_onchanges.md)
+- [Chapter 9: Ready For Some Action?](md/server_framework/09_ready_for_some_action.md)
+- [Chapter 10: Constraints](md/server_framework/10_constraints.md)
+- [Chapter 11: Add The Sprinkles](md/server_framework/11_add_the_sprinklesy.md)
+- [Chapter 12: Inheritance](md/server_framework/12_inheritance.md)
+- [Chapter 13: Interact With Other Modules](md/server_framework/13_interact_with_other_modules.md)
+- [Chapter 14: A Brief History Of QWeb](md/server_framework/14_a_brief_history_of_qweb.md)
+- [Chapter 15: The final word](md/server_framework/15_the_final_word.md)
 
 
 
