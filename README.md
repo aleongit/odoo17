@@ -38,10 +38,8 @@ Checkpoints:
 
 ## Run
 - `cd odoo17`
-- `source venv/bin/activate` 
-- or `. venv/bin/activate`
-- `python3 odoo-bin -c odoo.conf` 
-- or `./odoo-bin -c odoo.conf`
+- `source venv/bin/activate` or `. venv/bin/activate`
+- `python3 odoo-bin -c odoo.conf` or `./odoo-bin -c odoo.conf`
 - http://192.168.1.60:8069/
 
 
