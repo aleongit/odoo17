@@ -103,6 +103,42 @@ The `Counter` component specifies the name of a template that represents its htm
 - https://github.com/odoo/owl/blob/master/doc/reference/reactivity.md
 
 
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+import { Component, useState } from "@odoo/owl";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+
+  setup() {
+    this.state = useState({ counter: 0 });
+  }
+
+  increment() {
+    this.state.counter++;
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+        <div class="p-3">
+            hello world
+        </div>
+        <div class="p-3">
+            <p>Counter: <t t-esc="state.counter"/>
+            </p>
+            <button class="btn btn-primary" t-on-click="increment">
+                Increment
+            </button>
+        </div>
+    </t>
+</templates>
+```
+
 
 ## 2. Extract Counter in a sub component
 
@@ -126,5 +162,65 @@ The `Counter` component specifies the name of a template that represents its htm
 - By convention, most components code, template and css should have the same snake-cased name as the component
 - For example, if we have a `TodoList` component, its code should be in `todo_list.js`, `todo_list.xml` and if necessary, `todo_list.scss`
 
+---
 
+- **tutorials/awesome_owl/static/src/counter/counter.js**
+```
+/** @odoo-module **/
 
+import { Component, useState } from "@odoo/owl";
+
+export class Counter extends Component {
+  static template = "awesome_owl.counter";
+
+  setup() {
+    this.state = useState({ counter: 0 });
+  }
+
+  increment() {
+    this.state.counter++;
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/counter/counter.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.counter">
+        <div class="p-3">
+            <p>Counter: <t t-esc="state.counter"/>
+            </p>
+            <button class="btn btn-primary" t-on-click="increment">
+                Increment
+            </button>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+import { Counter } from "./counter/counter";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter };
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+        <div class="p-3">
+            hello world
+        </div>
+        <Counter />
+    </t>
+</templates>
+```
