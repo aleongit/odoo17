@@ -227,3 +227,104 @@ export class Playground extends Component {
     </t>
 </templates>
 ```
+
+
+## 3. A simple Card component
+
+- Components are really the most natural way to divide a complicated user interface into multiple reusable pieces
+- But to make them truly useful, it is necessary to be able to communicate some information between them
+- Let us see how a parent component can provide information to a sub component by using *attributes* (most commonly known as `props`)
+- https://github.com/odoo/owl/blob/master/doc/reference/props.md
+
+---
+
+- The goal of this exercise is to create a `Card` component, that takes two *props*: `title` and `content`
+- For example, here is how it could be used:
+```
+<Card title="'my title'" content="'some content'"/>
+```
+
+- The above example should produce some html using bootstrap that look like this:
+```
+<div class="card d-inline-block m-2" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">my title</h5>
+        <p class="card-text">
+         some content
+        </p>
+    </div>
+</div>
+```
+
+1. Create a `Card` component
+2. Import it in `Playground` and display a few cards in its template
+
+---
+
+- **tutorials/awesome_owl/static/src/card/card.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class Card extends Component {
+  static template = "awesome_owl.card";
+}
+```
+
+- **tutorials/awesome_owl/static/src/card/card.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.card">
+        <div class="card d-inline-block m-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <t t-esc="props.title"/>
+                </h5>
+                <p class="card-text">
+                    <t t-esc="props.content"/>
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+import { Counter } from "./counter/counter";
+import { Card } from "./card/card";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter, Card };
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+        <div class="p-3">
+            hello world
+        </div>
+        <!-- counter -->
+        <div class="d-flex justify-content-start">
+            <Counter />
+            <Counter />
+        </div>
+        <!-- card with props -->
+        <div class="d-flex justify-content-start">
+            <Card title="'card 1'" content="'content of card 1'"/>
+            <Card title="'card 2'" content="'content of card 2'"/>
+        </div>
+    </t>
+</templates>
+```
+
+## 4. Using `markup` to display html
