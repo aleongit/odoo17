@@ -33,6 +33,7 @@ Checkpoints:
 ## Tutorial - Discover the web framework
 
 - [Setup](md/discover_web_framework/0_setup.md)
+- [Chapter 1: Owl components](md/discover_web_framework/01_owl_components.md)
 
 
 
