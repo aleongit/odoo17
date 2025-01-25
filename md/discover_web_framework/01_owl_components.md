@@ -104,3 +104,27 @@ The `Counter` component specifies the name of a template that represents its htm
 
 
 
+## 2. Extract Counter in a sub component
+
+- For now we have the logic of a counter in the `Playground` component, but it is not reusable
+- Let us see how to create a **sub-component** from it:
+- https://github.com/odoo/owl/blob/master/doc/reference/component.md#sub-components
+
+---
+
+1. Extract the counter code from the `Playground` component into a new `Counter` component
+
+2. You can do it in the same file first, but once it’s done, update your code to move the `Counter` in its own folder and file
+- Import it relatively from `./counter/counter`
+- Make sure the template is in its own file, with the same name
+
+3. Use `<Counter/>` in the template of the `Playground` component to add two counters in your playground
+
+---
+
+- 💡 **Tip**:
+- By convention, most components code, template and css should have the same snake-cased name as the component
+- For example, if we have a `TodoList` component, its code should be in `todo_list.js`, `todo_list.xml` and if necessary, `todo_list.scss`
+
+
+
