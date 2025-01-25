@@ -44,6 +44,12 @@ Checkpoints:
 - http://192.168.1.60:8069/
 
 
+
+## Owl tutorial routes
+- - http://192.168.1.60:8069/awesome_owl
+
+
+
 ## Run Tutorials
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate`
 - `python3 odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml`
