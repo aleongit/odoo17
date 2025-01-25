@@ -220,7 +220,10 @@ export class Playground extends Component {
         <div class="p-3">
             hello world
         </div>
-        <Counter />
+        <div class="d-flex justify-content-start">
+            <Counter />
+            <Counter />
+        </div>
     </t>
 </templates>
 ```

@@ -46,7 +46,7 @@ Checkpoints:
 
 
 ## Owl tutorial routes
-- - http://192.168.1.60:8069/awesome_owl
+- http://192.168.1.60:8069/awesome_owl
 
 
 
