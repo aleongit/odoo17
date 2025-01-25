@@ -328,3 +328,72 @@ export class Playground extends Component {
 ```
 
 ## 4. Using `markup` to display html
+
+- If you used `t-esc` in the previous exercise, then you may have noticed that Owl automatically escapes its content
+- For example, if you try to display some html like this: `<Card title="'my title'" content="this.html"/>` with `this.html = "<div>some content</div>"`, the resulting output will simply display the html as a string
+
+- In this case, since the `Card` component may be used to display any kind of content, it makes sense to allow the user to display some html - This is done with the `t-out` directive
+- https://github.com/odoo/owl/blob/master/doc/reference/templates.md#outputting-data
+
+- However, displaying arbitrary content as html is dangerous, it could be used to inject malicious code, so by default, Owl will always escape a string unless it has been explicitely marked as safe with the `markup` function
+
+---
+
+1. Update `Card` to use `t-out`
+2. Update `Playground` to import `markup`, and use it on some html values
+3. Make sure that you see that normal strings are always escaped, unlike markuped strings
+- **Note**
+- The `t-esc` directive can still be used in Owl templates
+- It is slightly faster than `t-out`
+
+---
+
+- **tutorials/awesome_owl/static/src/card/card.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.card">
+        <div class="card d-inline-block m-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <t t-out="props.title"/>
+                </h5>
+                <p class="card-text">
+                    <t t-out="props.content"/>
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+
+import { Component, markup } from "@odoo/owl";
+import { Counter } from "./counter/counter";
+import { Card } from "./card/card";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter, Card };
+
+  setup() {
+    this.html1 = "<div class='text-primary'>some content</div>";
+    this.html2 = markup("<div class='text-primary'>some content</div>");
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+...
+    <div class="d-flex justify-content-start">
+        <Card title="'card 1'" content="html1"/>
+        <Card title="'card 2'" content="html2"/>
+    </div>
+...
+```
+
+## 5. Props validation
