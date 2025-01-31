@@ -397,3 +397,24 @@ export class Playground extends Component {
 ```
 
 ## 5. Props validation
+
+- The `Card` component has an implicit API. It expects to receive two strings in its props: the `title` and the `content`
+- Let us make that API more explicit
+- We can add a props definition that will let Owl perform a validation step in **dev mode**
+- https://github.com/odoo/owl/blob/master/doc/reference/app.md#dev-mode
+- You can activate the dev mode in the **App configuration** (but it is activated by default on the `awesome_owl` playground)
+- https://github.com/odoo/owl/blob/master/doc/reference/app.md#configuration
+
+It is a good practice to do props validation for every component.
+
+1. Add **props validation** to the `Card` component
+- https://github.com/odoo/owl/blob/master/doc/reference/props.md#props-validation
+2. Rename the `title` props into something else in the playground template, then check in the **Console** tab of your browser’s dev tools that you can see an error
+
+
+
+
+
+
+
+
