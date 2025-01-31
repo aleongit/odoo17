@@ -4,13 +4,14 @@
         <div class="p-3">
             hello world
         </div>
-        <!-- counter -->
-        <div class="d-flex justify-content-start">
-            <Counter />
-            <Counter />
+        <!-- counters -->
+        <div class="d-flex justify-content-start align-items-center">
+            <Counter onChange.bind="incrementSum" />
+            <Counter onChange.bind="incrementSum" />
+            <div>The sum is: <t t-esc="state.sum"/></div>
         </div>
         <!-- card with props -->
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start align-items-center">
             <Card title="'card 1'" content="html1"/>
             <Card title="'card 2'" content="html2"/>
         </div>
