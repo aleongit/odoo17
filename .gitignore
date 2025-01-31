@@ -41,7 +41,7 @@ package.json
 .husky
 
 # various virtualenv
-/bin/
+# /bin/
 /build/
 /dist/
 /include/

@@ -38,9 +38,11 @@ Checkpoints:
 
 
 ## Run
-- `cd odoo17`
-- `source venv/bin/activate` or `. venv/bin/activate`
-- `python3 odoo-bin -c odoo.conf` or `./odoo-bin -c odoo.conf`
+1. `cd odoo17`
+2. `source venv/bin/activate` or `. venv/bin/activate`
+3. `python3 odoo-bin -c odoo.conf` or `./odoo-bin -c odoo.conf`
+- or
+- `./bin/start_odoo`
 - http://192.168.1.60:8069/
 
 
@@ -71,7 +73,7 @@ default_productivity_apps = True
 
 
 ## Run with Debug
-- run `source .bin/debug.sh`
+- run `source bin/debug.sh`
 - to fix connections on port
 ```
 lsof -i :5678
@@ -361,7 +363,7 @@ default_productivity_apps = True
 - `source venv/bin/activate`
 - `pip install debugpy`
 
-- create `.bin/debug.sh`
+- create `bin/debug.sh`
 ```
 source venv/bin/activate
 python3 /home/aleon/odoo17/venv/lib/python3.12/site-packages/debugpy --listen 0.0.0.0:5678 ./odoo-bin --addons-path="addons/,tutorials/" -d rd-demo -u estate --dev xml
@@ -383,7 +385,7 @@ python3 /home/aleon/odoo17/venv/lib/python3.12/site-packages/debugpy --listen 0.
 }
 ```
 
-- run `source .bin/debug.sh`
+- run `source bin/debug.sh`
 
 - to fix connections on port
 ```
