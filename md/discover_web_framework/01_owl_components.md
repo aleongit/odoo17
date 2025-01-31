@@ -411,10 +411,113 @@ It is a good practice to do props validation for every component.
 - https://github.com/odoo/owl/blob/master/doc/reference/props.md#props-validation
 2. Rename the `title` props into something else in the playground template, then check in the **Console** tab of your browser’s dev tools that you can see an error
 
+---
+
+- **tutorials/awesome_owl/static/src/card/card.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class Card extends Component {
+  static template = "awesome_owl.card";
+  static props = {
+    title: String,
+    content: String,
+  };
+}
+```
 
 
+## 6. The sum of two `Counter`
 
+We saw in a previous exercise that `props` can be used to provide information from a parent to a child component. Now, let us see how we can communicate information in the opposite direction: in this exercise, we want to display two `Counter` components, and below them, the sum of their values. So, the parent component (`Playground`) need to be informed whenever one of the `Counter` value is changed.
 
+This can be done by using a **callback prop**: a prop that is a function meant to be called back. The child component can choose to call that function with any argument. In our case, we will simply add an optional `onChange` prop that will be called whenever the `Counter` component is incremented.
 
+- https://github.com/odoo/owl/blob/master/doc/reference/props.md#binding-function-props
+
+1. Add prop validation to the `Counter` component: it should accept an optional `onChange` function prop
+2. Update the `Counter` component to call the `onChange` prop (if it exists) whenever it is incremented
+3. Modify the `Playground` component to maintain a local state value (sum), initially set to 0, and display it in its template
+4. Implement an `incrementSum` method in Playground
+5. Give that method as a prop to two (or more!) sub `Counter` components
+- ⚠️ **Important**: 
+- There is a subtlety with callback props: they usually should be defined with the `.bind suffix`
+
+---
+
+- **tutorials/awesome_owl/static/src/counter/counter.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+
+export class Counter extends Component {
+  static template = "awesome_owl.counter";
+  static props = {
+    onChange: { type: Function, optional: true }
+};
+
+  setup() {
+    this.state = useState({ counter: 0 });
+  }
+
+  increment() {
+    this.state.counter++;
+    if (this.props.onChange) {
+      this.props.onChange();
+  }
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+
+import { Component, markup, useState } from "@odoo/owl";
+import { Counter } from "./counter/counter";
+import { Card } from "./card/card";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter, Card };
+
+  setup() {
+    this.html1 = "<div class='text-primary'>some content</div>";
+    this.html2 = markup("<div class='text-primary'>some content</div>");
+    this.sum = useState({ value: 0 });
+  }
+
+  incrementSum() {
+    this.sum.value++;
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+        <div class="p-3">
+            hello world
+        </div>
+        <!-- counters -->
+        <div class="d-flex justify-content-start">
+            <Counter onChange.bind="incrementSum" />
+            <Counter onChange.bind="incrementSum" />
+            <div>The sum is: <t t-esc="sum.value"/></div>
+        </div>
+        <!-- card with props -->
+        <div class="d-flex justify-content-start">
+            <Card title="'card 1'" content="html1"/>
+            <Card title="'card 2'" content="html2"/>
+        </div>
+    </t>
+</templates>
+
+```
 
 
