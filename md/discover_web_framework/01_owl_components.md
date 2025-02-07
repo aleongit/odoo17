@@ -613,7 +613,6 @@ export class TodoList extends Component {
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="awesome_owl.todo_list">
-        <!-- t-foreach child component with props -->
         <div class="d-inline-block border p-2 m-2">
             <div t-foreach="todos" t-as="todo" t-key="todo.id">
                 <TodoItem todo="todo"/>
@@ -641,7 +640,6 @@ export class Playground extends Component {
 <templates xml:space="preserve">
     <t t-name="awesome_owl.playground">
 ...
-        <!-- todo list-->
         <div class="d-flex justify-content-start align-items-center">
             <TodoList />
         </div>
@@ -697,4 +695,70 @@ export class Playground extends Component {
 </templates>
 ```
 
+## 9. Adding a todo
 
+So far, the todos in our list are hard-coded. Let us make it more useful by allowing the user to add a todo to the list.
+
+1. Remove the hardcoded values in the `TodoList` component
+
+2. Add an input above the task list with placeholder *Enter a new task*
+
+3. Add an **event handler** on the `keyup` event named `addTodo`
+- https://github.com/odoo/owl/blob/master/doc/reference/event_handling.md
+
+4. Implement `addTodo` to check if enter was pressed (`ev.keyCode === 13`), and in that case, create a new todo with the current content of the input as the description and clear the input of all content
+
+5. Make sure the todo has a unique id. It can be just a counter that increments at each todo
+
+6. Bonus point: don’t do anything if the input is empty
+
+- https://github.com/odoo/owl/blob/master/doc/reference/reactivity.md
+
+---
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+import { TodoItem } from "./todo_item";
+
+export class TodoList extends Component {
+  static template = "awesome_owl.todo_list";
+  static components = { TodoItem };
+
+  setup() {
+    this.todos = useState([]);
+    this.nextId = 0;
+  }
+
+  addTodo(ev) {
+    if (ev.keyCode === 13 && ev.target.value != "") {
+      this.todos.push({
+        id: this.nextId++,
+        description: ev.target.value,
+        isCompleted: false,
+      });
+      ev.target.value = "";
+    }
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_list">
+
+        <div class="d-inline-block border p-2 m-2">
+            <!-- event handling -->
+            <input class="form-control mb-3" type="text" 
+                placeholder="Add a todo" t-on-keyup="addTodo"/>
+            <div t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem todo="todo"/>
+            </div>
+        </div>
+    </t>
+</templates>
+```
