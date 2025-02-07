@@ -520,4 +520,131 @@ export class Playground extends Component {
 
 ```
 
+## 7. A todo list
 
+Let us now discover various features of Owl by creating a todo list. We need two components: a `TodoList` component that will display a list of `TodoItem` components. The list of todos is a state that should be maintained by the `TodoList`.
+
+For this tutorial, a `todo` is an object that contains three values: an `id` (number), a `description` (string) and a flag `isCompleted` (boolean):
+
+```
+{ id: 3, description: "buy milk", isCompleted: false }
+```
+
+1. Create a `TodoList` and a `TodoItem` components
+
+2. The `TodoItem` component should receive a `todo` as a *prop*, and display its `id` and `description` in a div
+
+3. For now, hardcode the list of todos:
+```
+// in TodoList
+this.todos = useState([{ id: 3, description: "buy milk", isCompleted: false }]);
+```
+
+4. Use `t-foreach` to display each todo in a `TodoItem`
+- https://github.com/odoo/owl/blob/master/doc/reference/templates.md#loops
+
+5. Display a `TodoList` in the playground
+
+6. Add props validation to `TodoItem`
+
+- 💡 **Tip**:
+- Since the `TodoList` and `TodoItem` components are so tightly coupled, it makes sense to put them in the same folder
+- **Note**
+- The `t-foreach` directive is not exactly the same in Owl as the QWeb python implementation: it requires a `t-key` unique value, so that Owl can properly reconcile each element
+
+---
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class TodoItem extends Component {
+  static template = "awesome_owl.todo_item";
+  static props = {
+    todo: {
+      type: Object,
+      shape: { id: Number, description: String, isCompleted: Boolean },
+    },
+  };
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_item">
+        <div class="m-2" style="width: 18rem;">
+            <span class="fw-bold">
+                <t t-out="props.todo.id"/>
+                <span class="me-1">.</span>
+            </span>
+            <t t-out="props.todo.description"/>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+import { TodoItem } from "./todo_item";
+
+export class TodoList extends Component {
+  static template = "awesome_owl.todo_list";
+  static components = { TodoItem };
+
+  setup() {
+    this.todos = useState([
+      { id: 1, description: "write tutorial", isCompleted: true },
+      { id: 2, description: "buy milk", isCompleted: false },
+      { id: 3, description: "save the world", isCompleted: false },
+    ]);
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_list">
+        <!-- t-foreach child component with props -->
+        <div class="d-inline-block border p-2 m-2">
+            <div t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem todo="todo"/>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+...
+import { TodoList } from "./todo_list/todo_list";
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter, Card, TodoList };
+...
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+...
+        <!-- todo list-->
+        <div class="d-flex justify-content-start align-items-center">
+            <TodoList />
+        </div>
+    </t>
+</templates>
+```
