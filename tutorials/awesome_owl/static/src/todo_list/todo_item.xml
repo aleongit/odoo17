@@ -3,11 +3,16 @@
 
     <t t-name="awesome_owl.todo_item">
         <div class="m-2" style="width: 18rem;">
-            <span class="fw-bold">
-                <t t-out="props.todo.id"/>
-                <span class="me-1">.</span>
-            </span>
-            <t t-out="props.todo.description"/>
+            <div t-att-class="
+                    {'text-muted text-decoration-line-through': 
+                        props.todo.isCompleted}
+                    ">
+                <span class="fw-bold">
+                    <t t-out="props.todo.id"/>
+                    <span class="me-1">.</span>
+                </span>
+                <t t-out="props.todo.description"/>
+            </div>
         </div>
     </t>
 
