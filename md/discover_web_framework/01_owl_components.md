@@ -648,3 +648,53 @@ export class Playground extends Component {
     </t>
 </templates>
 ```
+
+## 8. Use dynamic attributes
+
+- For now, the `TodoItem` component does not visually show if the todo is completed
+- Let us do that by using a *dynamic* attributes
+- https://github.com/odoo/owl/blob/master/doc/reference/templates.md#dynamic-attributes
+
+---
+
+1. Add the Bootstrap classes `text-muted` and `text-decoration-line-through` on the `TodoItem` root element if it is completed
+
+2. Change the hardcoded `this.todos` value to check that it is properly displayed
+
+---
+
+- Even though the directive is named `t-att` (for attribute), it can be used to set a `class` value (and html properties such as the `value` of an input)
+- 💡 **Tip**:
+- Owl let you combine static class values with dynamic values
+- The following example will work as expected:
+```
+<div class="a" t-att-class="someExpression"/>
+```
+- https://github.com/odoo/owl/blob/master/doc/reference/templates.md#dynamic-class-attribute
+
+---
+
+-- **tutorials/awesome_owl/static/src/todo_list/todo_item.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="awesome_owl.todo_item">
+        <div class="m-2" style="width: 18rem;">
+            <div t-att-class="
+                    {'text-muted text-decoration-line-through': 
+                        props.todo.isCompleted}
+                    ">
+                <span class="fw-bold">
+                    <t t-out="props.todo.id"/>
+                    <span class="me-1">.</span>
+                </span>
+                <t t-out="props.todo.description"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
+```
+
+
