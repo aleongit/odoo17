@@ -762,3 +762,41 @@ export class TodoList extends Component {
     </t>
 </templates>
 ```
+
+## Theory: Component lifecycle and hooks
+
+- So far, we have seen one example of a hook function: `useState`
+- A **hook** is a special function that hook into the internals of the component
+- https://github.com/odoo/owl/blob/master/doc/reference/hooks.md
+- In the case of `useState`, it generates a proxy object linked to the current component
+- This is why hook functions have to be called in the `setup` method, and no later!
+
+
+![Screenshot](component_lifecycle.png)
+
+- An Owl component goes through a lot of phases: it can be instantiated, rendered, mounted, updated, detached, destroyed… 
+- This is the *component lifecycle*
+- https://github.com/odoo/owl/blob/master/doc/reference/component.md#lifecycle
+- The figure above show the most important events in the life of a component (hooks are shown in purple)
+- Roughly speaking, a component is created, then updated (potentially many times), then is destroyed
+
+---
+
+- Owl provides a variety of built-in hooks functions
+- All of them have to be called in the `setup` function
+- For example, if you want to execute some code when your component is mounted, you can use the `onMounted` hook
+```
+setup() {
+  onMounted(() => {
+    // do something here
+  });
+}
+```
+
+- 💡 **Tip**:
+- All hook functions start with `use` or `on`
+- For example: `useState` or `onMounted`
+
+
+
+
