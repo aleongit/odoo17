@@ -672,7 +672,7 @@ export class Playground extends Component {
 
 ---
 
--- **tutorials/awesome_owl/static/src/todo_list/todo_item.xml**
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.xml**
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
