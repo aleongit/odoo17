@@ -798,5 +798,96 @@ setup() {
 - For example: `useState` or `onMounted`
 
 
+## 10. Focusing the input
 
+- Let's see how we can access the DOM with `t-ref` and `useRef`
+- https://github.com/odoo/owl/blob/master/doc/reference/refs.md
+- https://github.com/odoo/owl/blob/master/doc/reference/hooks.md#useref
+- The main idea is that you need to mark the target element in the component template with a `t-ref`:
+
+```
+<div t-ref="some_name">hello</div>
+```
+
+- Then you can access it in the JS with the `useRef` hook
+- However, there is a problem if you think about it: the actual html element for a component does not exist when the component is created
+- It only exists when the component is mounted
+- But hooks have to be called in the `setup` method
+- So, `useRef` return an object that contains a `el` (for element) key that is only defined when the component is mounted
+
+```
+setup() {
+   this.myRef = useRef('some_name');
+   onMounted(() => {
+      console.log(this.myRef.el);
+   });
+}
+```
+
+1. Focus the `input` from the previous exercise
+- This this should be done from the `TodoList` component (note that there is a `focus` method on the input html element)
+2. Bonus point: extract the code into a specialized hook `useAutofocus` in a new `awesome_owl/utils.js` file
+-  💡 **Tip**:
+- Refs are usually suffixed by `Ref` to make it obvious that they are special objects:
+```
+this.inputRef = useRef('input');
+```
+
+- **tutorials/awesome_owl/static/src/utils.js**
+```
+/** @odoo-module */
+
+import { useRef, onMounted } from "@odoo/owl";
+
+export function useAutofocus(refName) {
+  const ref = useRef(refName);
+  onMounted(() => {
+    ref.el.focus();
+  });
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+import { TodoItem } from "./todo_item";
+import { useAutofocus } from "../utils";
+
+export class TodoList extends Component {
+  static template = "awesome_owl.todo_list";
+  static components = { TodoItem };
+
+  setup() {
+    this.todos = useState([]);
+    this.nextId = 0;
+    useAutofocus("input")
+  }
+...
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="awesome_owl.todo_list">
+
+        <div class="d-inline-block border p-2 m-2">
+            <!-- event handling -->
+            <input class="form-control mb-3" 
+                type="text" 
+                placeholder="Add a todo" 
+                t-on-keyup="addTodo"
+                t-ref="input"/>
+            <!-- t-foreach child component with props -->
+            <div t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem todo="todo"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
+```
 
