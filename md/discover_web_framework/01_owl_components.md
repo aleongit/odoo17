@@ -891,3 +891,98 @@ export class TodoList extends Component {
 </templates>
 ```
 
+## 11. Toggling todos
+
+Now, let’s add a new feature: mark a todo as completed. This is actually trickier than one might think. The owner of the state is not the same as the component that displays it. So, the `TodoItem` component needs to communicate to its parent that the todo state needs to be toggled. One classic way to do this is by adding a callback prop `toggleState`
+
+- https://github.com/odoo/owl/blob/master/doc/reference/props.md#binding-function-props
+
+1. Add an input with the attribute `type="checkbox"` before the id of the task, which must be checked if the state `isCompleted` is true
+
+-  💡 **Tip**:
+- Owl does not create attributes computed with the `t-att` directive if it evaluates to a falsy value.
+
+2. Add a callback props `toggleState` to `TodoItem`
+
+3. Add a `change` event handler on the input in the `TodoItem` component and make sure it calls the `toggleState` function with the todo id
+
+4. Make it work!
+
+---
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_item">
+        <div class="form-check">
+            <input 
+                class="form-check-input" 
+                type="checkbox" 
+                t-att-id="props.todo.id" 
+                t-att-checked="props.todo.isCompleted" 
+                t-on-change="onChange"/>
+            <label 
+                t-att-for="props.todo.id"
+                t-att-class="{'text-muted text-decoration-line-through': 
+                        props.todo.isCompleted}">
+                <b><t t-esc="props.todo.id"/>. </b>
+                <t t-esc="props.todo.description"/>
+            </label>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class TodoItem extends Component {
+  static template = "awesome_owl.todo_item";
+  static props = {
+    todo: {
+      type: Object,
+      shape: { id: Number, description: String, isCompleted: Boolean },
+    },
+    toggleState: Function,
+  };
+
+  onChange() {
+    this.props.toggleState(this.props.todo.id);
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_list">
+...
+            <div t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem todo="todo" toggleState.bind="toggleTodo"/>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.js**
+```
+/** @odoo-module **/
+...
+export class TodoList extends Component {
+  static template = "awesome_owl.todo_list";
+  static components = { TodoItem };
+...
+  toggleTodo(todoId) {
+    const todo = this.todos.find((todo) => todo.id === todoId);
+    if (todo) {
+      todo.isCompleted = !todo.isCompleted;
+    }
+  }
+}
+```
