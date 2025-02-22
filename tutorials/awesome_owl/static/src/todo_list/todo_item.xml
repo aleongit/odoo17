@@ -16,6 +16,8 @@
                 <b><t t-esc="props.todo.id"/>. </b>
                 <t t-esc="props.todo.description"/>
             </label>
+            <span class="fa fa-remove ms-1 text-danger" 
+                t-on-click="onRemove"/>
         </div>
     </t>
 
