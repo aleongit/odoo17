@@ -38,9 +38,21 @@ export class TodoList extends Component {
   }
 
   removeTodo(todoId) {
-    const todoIndex = this.todos.findIndex((todo) => todo.id === todoId);
-    if (todoIndex >= 0) {
-      this.todos.splice(todoIndex, 1);
+    // amb splice; trobar index i modificar array
+    // const todoIndex = this.todos.findIndex((todo) => todo.id === todoId);
+    // if (todoIndex >= 0) {
+    //   this.todos.splice(todoIndex, 1);
+    // }
+    
+    // amb filtered; filtrar amb nova array, i afegir-la a array d'estar eliminant el què tenia
+    // fem el que fem, sempre necessitem modificar array gestionada per useState
+    const filtered = this.todos.filter(todo => todo.id !== todoId);
+    this.todos.splice(0, this.todos.length, ...filtered); // Actualitza l'array original
+  }
+
+  removeTodoAll(ev) {
+    if (ev) {
+      this.todos.splice(0, this.todos.length);
     }
   }
 }
