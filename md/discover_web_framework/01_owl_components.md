@@ -986,3 +986,121 @@ export class TodoList extends Component {
   }
 }
 ```
+
+## 12. Deleting todos
+
+The final touch is to let the user delete a todo.
+
+1. Add a new callback prop `removeTodo` in `TodoItem`
+
+2. Insert `<span class="fa fa-remove"/>` in the template of the `TodoItem` component
+
+3. Whenever the user clicks on it, it should call the `removeTodo` method
+
+4. Make it work!
+
+-  💡 **Tip**:
+- If you're using an array to store your todo list, you can use the JavaScript `splice` function to remove a todo from it
+```
+// find the index of the element to delete
+const index = list.findIndex((elem) => elem.id === elemId);
+if (index >= 0) {
+      // remove the element at index from list
+      list.splice(index, 1);
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="awesome_owl.todo_item">
+        <div class="form-check">
+            <input 
+                class="form-check-input" 
+                type="checkbox" 
+                t-att-id="props.todo.id" 
+                t-att-checked="props.todo.isCompleted" 
+                t-on-change="onChange"/>
+            <label 
+                t-att-for="props.todo.id"
+                t-att-class="{'text-muted text-decoration-line-through': 
+                        props.todo.isCompleted}">
+                <b><t t-esc="props.todo.id"/>. </b>
+                <t t-esc="props.todo.description"/>
+            </label>
+            <span class="fa fa-remove ms-1 text-danger" 
+                t-on-click="onRemove"/>
+        </div>
+    </t>
+
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_item.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class TodoItem extends Component {
+  static template = "awesome_owl.todo_item";
+  static props = {
+    todo: {
+      type: Object,
+      shape: { id: Number, description: String, isCompleted: Boolean },
+    },
+    toggleState: Function,
+    removeTodo: Function,
+  };
+
+  onChange() {
+    this.props.toggleState(this.props.todo.id);
+  }
+  onRemove() {
+    this.props.removeTodo(this.props.todo.id)
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.todo_list">
+        <div class="d-inline-block border p-2 m-2">
+            <!-- event handling -->
+            <input class="form-control mb-3" 
+                type="text" 
+                placeholder="Add a todo" 
+                t-on-keyup="addTodo"
+                t-ref="input"/>
+            <!-- t-foreach child component with props -->
+            <div t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem 
+                    todo="todo" 
+                    toggleState.bind="toggleTodo"
+                    removeTodo.bind="removeTodo"/>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/todo_list/todo_list.js**
+```
+...
+export class TodoList extends Component {
+  static template = "awesome_owl.todo_list";
+  static components = { TodoItem };
+
+  ...
+  removeTodo(todoId) {
+    const todoIndex = this.todos.findIndex((todo) => todo.id === todoId);
+    if (todoIndex >= 0) {
+      this.todos.splice(todoIndex, 1);
+    }
+  }
+}
+```
