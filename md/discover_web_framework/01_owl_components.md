@@ -1065,3 +1065,20 @@ export class TodoList extends Component {
   }
 }
 ```
+
+## 13. Generic `Card` with slots
+
+In a previous exercise, we built a simple `Card` component. But it is honestly quite limited. What if we want to display some arbitrary content inside a card, such as a sub-component? Well, it does not work, since the content of the card is described by a string. It would however be very convenient if we could describe the content as a piece of template.
+
+This is exactly what Owl’s `slot` system is designed for: allowing to write generic components.
+- https://github.com/odoo/owl/blob/master/doc/reference/slots.md
+
+---
+
+Let us modify the `Card` component to use **slots**:
+- Remove the `content` prop
+- Use the default slot to define the body
+- Insert a few cards with arbitrary content, such as a `Counter` component
+- (bonus) Add prop validation.
+
+
