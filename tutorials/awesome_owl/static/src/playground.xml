@@ -4,17 +4,31 @@
         <div class="p-3">
             hello world
         </div>
+        
         <!-- counters -->
         <div class="d-flex justify-content-start align-items-center">
             <Counter onChange.bind="incrementSum" />
             <Counter onChange.bind="incrementSum" />
             <div>The sum is: <t t-esc="state.sum" /></div>
         </div>
+        
         <!-- card with props -->
         <div class="d-flex justify-content-start align-items-center">
             <Card title="'card 1'" content="html1" />
             <Card title="'card 2'" content="html2" />
         </div>
+
+        <!-- card with slot -->
+        <CardSlot title="'card 1'">
+            hy card with slot!
+        </CardSlot>
+        <CardSlot title="'card 2'">
+            <t t-out="html2" />
+        </CardSlot>
+        <CardSlot title="'card 3'">
+            <Counter />
+        </CardSlot>
+
         <!-- todo list-->
         <div class="d-flex justify-content-start align-items-center">
             <TodoList />
