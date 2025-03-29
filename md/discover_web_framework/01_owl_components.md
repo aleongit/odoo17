@@ -1156,3 +1156,56 @@ export class Playground extends Component {
     </t>
 </templates>
 ```
+
+## 14. Minimizing card content
+
+Finally, let’s add a feature to the `Card` component, to make it more interesting: we want a button to toggle its content (show it or hide it)
+
+- Add a **state** to the `Card` component to track if it is open (the default) or not
+- Add a `t-if` in the template to conditionally render the content
+- Add a button in the header, and modify the code to flip the state when the button is clicked
+
+---
+
+- **tutorials/awesome_owl/static/src/card_slot/card_slot.js**
+```
+/** @odoo-module **/
+
+import { Component, useState } from "@odoo/owl";
+
+export class CardSlot extends Component {
+  static template = "awesome_owl.card_slot";
+...
+  setup() {
+    this.state = useState({ isOpen: true });
+  }
+
+  toggle() {
+    this.state.isOpen = !this.state.isOpen;
+    console.log(this.state.open);
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/card_slot/card_slot.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.card_slot">
+        <div class="card d-inline-block m-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <t t-out="props.title"/>
+                    <button class="btn btn-sm btn-outline-secondary" 
+                            t-on-click="toggle">
+                        Toggle
+                    </button>
+                </h5>
+                <p class="card-text" t-if="state.isOpen">
+                    <t t-slot="default"/>
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>
+```
