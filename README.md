@@ -34,6 +34,7 @@ Checkpoints:
 
 - [Setup](md/discover_web_framework/0_setup.md)
 - [Chapter 1: Owl components](md/discover_web_framework/01_owl_components.md)
+- [Chapter 2: Build a dashboard](md/discover_web_framework/02_build_a_dashboard.md)
 
 
 
