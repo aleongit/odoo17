@@ -1081,4 +1081,78 @@ Let us modify the `Card` component to use **slots**:
 - Insert a few cards with arbitrary content, such as a `Counter` component
 - (bonus) Add prop validation.
 
+---
 
+- **tutorials/awesome_owl/static/src/card_slot/card_slot.js**
+```
+/** @odoo-module **/
+
+import { Component } from "@odoo/owl";
+
+export class CardSlot extends Component {
+  static template = "awesome_owl.card_slot";
+  static props = {
+    title: String,
+    slots: {
+      type: Object,
+      shape: {
+        default: true,
+      },
+    },
+  };
+}
+```
+
+- **tutorials/awesome_owl/static/src/card_slot/card_slot.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.card_slot">
+        <div class="card d-inline-block m-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <t t-out="props.title"/>
+                </h5>
+                <p class="card-text">
+                    <t t-slot="default"/>
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_owl/static/src/playground.js**
+```
+/** @odoo-module **/
+...
+import { CardSlot } from "./card_slot/card_slot";
+...
+
+export class Playground extends Component {
+  static template = "awesome_owl.playground";
+  static components = { Counter, Card, CardSlot, TodoList };
+...
+  }
+}
+```
+
+- **tutorials/awesome_owl/static/src/playground.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_owl.playground">
+...
+        <CardSlot title="'card 1'">
+            hy card with slot!
+        </CardSlot>
+        <CardSlot title="'card 2'">
+            <t t-out="html2" />
+        </CardSlot>
+        <CardSlot title="'card 3'">
+            <Counter />
+        </CardSlot>
+...
+    </t>
+</templates>
+```
