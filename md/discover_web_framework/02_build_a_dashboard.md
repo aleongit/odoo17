@@ -89,3 +89,62 @@ registry
 - Example: use of Layout in kanban view
 - https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/views/kanban/kanban_controller.xml
 
+
+## Theory: Services
+
+In practice, every component (except the root component) may be destroyed at any time and replaced (or not) with another component. This means that each component internal state is not persistent. This is fine in many cases, but there certainly are situations where we want to keep some data around. For example, all Discuss messages should not be reloaded every time we display a channel.
+
+Also, it may happen that we need to write some code that is not a component. Maybe something that process all barcodes, or that manages the user configuration (context, etc.).
+
+The Odoo framework defines the idea of a **service**, which is a persistent piece of code that exports state and/or functions. Each service can depend on other services, and components can import a service
+
+- https://www.odoo.com/documentation/17.0/developer/reference/frontend/services.html#frontend-services
+
+The following example registers a simple service that displays a notification every 5 seconds:
+```
+import { registry } from "@web/core/registry";
+
+const myService = {
+    dependencies: ["notification"],
+    start(env, { notification }) {
+        let counter = 1;
+        setInterval(() => {
+            notification.add(`Tick Tock ${counter++}`);
+        }, 5000);
+    },
+};
+
+registry.category("services").add("myService", myService);
+```
+
+Services can be accessed by any component. Imagine that we have a service to maintain some shared state:
+```
+import { registry } from "@web/core/registry";
+
+const sharedStateService = {
+    start(env) {
+        let state = {};
+        return {
+            getValue(key) {
+                return state[key];
+            },
+            setValue(key, value) {
+                state[key] = value;
+            },
+        };
+    },
+};
+
+registry.category("services").add("shared_state", sharedStateService);
+```
+
+Then, any component can do this:
+```
+import { useService } from "@web/core/utils/hooks";
+
+setup() {
+   this.sharedState = useService("shared_state");
+   const value = this.sharedState.getValue("somekey");
+   // do something with value
+}
+```
