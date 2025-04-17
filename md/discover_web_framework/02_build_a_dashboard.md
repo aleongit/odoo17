@@ -148,3 +148,90 @@ setup() {
    // do something with value
 }
 ```
+
+## 2. Add some buttons for quick navigation
+
+One important service provided by Odoo is the `action` service: it can execute all kind of standard actions defined by Odoo. For example, here is how one component could execute an *action* by its *xml* id:
+```
+import { useService } from "@web/core/utils/hooks";
+...
+setup() {
+      this.action = useService("action");
+}
+openSettings() {
+      this.action.doAction("base_setup.action_general_configuration");
+}
+...
+```
+
+Let us now add two buttons to our control panel:
+
+1. A button `Customers`, which opens a kanban view with all customers (this action already exists, so you should use its xml id).
+- https://github.com/odoo/odoo/blob/1f4e583ba20a01f4c44b0a4ada42c4d3bb074273/odoo/addons/base/views/res_partner_views.xml#L510
+
+2. A button `Leads`, which opens a dynamic action on the `crm.lead` model with a list and a form view. Follow the example of this use of the action service.
+- https://github.com/odoo/odoo/blob/ef424a9dc22a5abbe7b0a6eff61cf113826f04c0/addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js#L28-L35
+
+---
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+/** @odoo-module **/
+...
+import { useService } from "@web/core/utils/hooks";
+
+class AwesomeDashboard extends Component {
+...
+
+  setup() {
+    this.action = useService("action");
+    this.display = {
+      controlPanel: {},
+    };
+  }
+
+  openCustomerView() {
+    this.action.doAction("base.action_partner_form");
+  }
+
+  openLeads() {
+    this.action.doAction({
+      type: "ir.actions.act_window",
+      name: "All leads",
+      res_model: "crm.lead",
+      views: [
+        [false, "list"],
+        [false, "form"],
+      ],
+    });
+  }
+}
+...
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="awesome_dashboard.AwesomeDashboard">
+        <Layout display="display" className="'o_dashboard h-100'">
+            <t t-set-slot="layout-buttons">
+                <button class="btn btn-primary" 
+                    t-on-click="openCustomerView">Customers</button>
+                <button class="btn btn-primary" 
+                    t-on-click="openLeads">Leads</button>
+            </t>
+             some content
+        </Layout>
+    </t>
+
+</templates>
+```
+
+- 📄 **See also**
+- Code: action service
+- https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/webclient/actions/action_service.js
+
+
+## 3. Add a dashboard item
