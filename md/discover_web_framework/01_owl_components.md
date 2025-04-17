@@ -21,8 +21,7 @@ To get started, you need a running Odoo server and a development environment set
 
 In this chapter, we use the `awesome_owl` addon, which provides a simplified environment that only contains Owl and a few other files. The goal is to learn Owl itself, without relying on Odoo web client code.
 
-- The solutions for each exercise of the chapter are hosted on the official Odoo tutorials repository
-- It is recommended to try to solve them first without looking at the solution!
+- **Solutions**
 - https://github.com/odoo/tutorials/commits/17.0-discover-js-framework-solutions/awesome_owl
 
 
