@@ -316,3 +316,8 @@ class AwesomeDashboard extends Component {
     </t>
 </templates>
 ```
+
+## 4. Call the server, add some statistics
+
+
+
