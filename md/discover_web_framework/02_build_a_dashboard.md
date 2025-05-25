@@ -235,3 +235,84 @@ class AwesomeDashboard extends Component {
 
 
 ## 3. Add a dashboard item
+
+Let us now improve our content.
+
+1. Create a generic `DashboardItem` component that display its default slot in a nice card layout. It should take an optional `size` number props, that default to `1`. The width should be hardcoded to`(18*size)rem`
+
+2. Add two cards to the dashboard. One with no size, and the other with a size of 2.
+
+- **tutorials/awesome_dashboard/static/src/dashboard_item/dashboard_item.js**
+```
+/** @odoo-module */
+import { Component } from "@odoo/owl";
+
+export class DashboardItem extends Component {
+  static template = "awesome_dashboard.DashboardItem";
+  static props = {
+    slots: {
+      type: Object,
+      shape: {
+        default: Object,
+      },
+    },
+    size: {
+      type: Number,
+      default: 1,
+      optional: true,
+    },
+  };
+}
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard_item/dashboard_item.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.DashboardItem">
+        <div class="card m-2 border-dark" t-attf-style="width: {{18*props.size}}rem;">
+            <div class="card-body">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+import { DashboardItem } from "./dashboard_item/dashboard_item";
+...
+
+class AwesomeDashboard extends Component {
+  static components = { Layout, DashboardItem };
+...
+}
+
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.AwesomeDashboard">
+        <Layout display="display" className="'o_dashboard h-100'">
+            <t t-set-slot="layout-buttons">
+                <button class="btn btn-primary" t-on-click="openCustomerView">Customers</button>
+                <button class="btn btn-primary" t-on-click="openLeads">Leads</button>
+            </t>
+            <div class="d-flex flex-wrap">
+                <DashboardItem>
+                    some content
+                </DashboardItem>
+                <DashboardItem size="2">
+                    I love milk
+                </DashboardItem>
+                <DashboardItem>
+                    some content
+                </DashboardItem>
+            </div>
+        </Layout>
+    </t>
+</templates>
+```
