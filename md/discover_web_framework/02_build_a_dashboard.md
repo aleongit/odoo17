@@ -343,3 +343,97 @@ setup() {
 - Average amount of t-shirt by order this month
 - Number of cancelled orders this month
 - Average time for an order to go from ‘new’ to ‘sent’ or ‘cancelled’
+
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+import { Component, onWillStart  } from "@odoo/owl";
+...
+
+  setup() {
+    this.action = useService("action");
+    this.rpc = useService("rpc");
+    this.display = {
+      controlPanel: {},
+    };
+    
+    onWillStart(async () => {
+            this.statistics = await this.rpc("/awesome_dashboard/statistics");
+        });
+  }
+...
+
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.AwesomeDashboard">
+        <Layout display="display" className="'o_dashboard h-100'">
+            <t t-set-slot="layout-buttons">
+                <button class="btn btn-primary" t-on-click="openCustomerView">Customers</button>
+                <button class="btn btn-primary" t-on-click="openLeads">Leads</button>
+            </t>
+            <div class="d-flex flex-wrap">
+                <DashboardItem>
+                    some content
+                </DashboardItem>
+                <DashboardItem size="2">
+                    I love milk
+                </DashboardItem>
+                <DashboardItem>
+                    some content
+                </DashboardItem>
+                <DashboardItem>
+                    Average amount of t-shirt by order this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.average_quantity"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Average time for an order to go from 'new' to 'sent' or 'cancelled'
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.average_time"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Number of new orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.nb_new_orders"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Number of cancelled orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.nb_cancelled_orders"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Total amount of new orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.total_amount"/>
+                    </div>
+                </DashboardItem>
+            </div>
+        </Layout>
+    </t>
+</templates>
+```
+
+
+
+
+## 5. Cache network calls, create a service
+
+If you open the **Network** tab of your browser’s dev tools, you will see that the call to `/awesome_dashboard/statistics` is done every time the client action is displayed. This is because the `onWillStart` hook is called each time the `Dashboard` component is mounted. But in this case, we would prefer to do it only the first time, so we actually need to maintain some state outside of the `Dashboard` component. This is a nice use case for a service!
+
+1. Register and import a new `awesome_dashboard.statistics` service.
+2. It should provide a function `loadStatistics` that, once called, performs the actual rpc, and always return the same information.
+3. Use the *memoize* utility function from `@web/core/utils/functions` that allows caching the statistics.
+4. Use this service in the `Dashboard` component.
+5. Check that it works as expected.
+
+- https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/core/network/http_service.js
+- https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/core/user_service.js
+
