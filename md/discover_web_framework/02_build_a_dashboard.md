@@ -319,5 +319,27 @@ class AwesomeDashboard extends Component {
 
 ## 4. Call the server, add some statistics
 
+Let’s improve the dashboard by adding a few dashboard items to display real business data. The `awesome_dashboard` addon provides a `/awesome_dashboard/statistics` route that is meant to return some interesting information.
 
+To call a specific controller, we need to use the **rpc service**. It only exports a single function that perform the request: `rpc(route, params, settings`)`. A basic request could look like this:
 
+- https://www.odoo.com/documentation/17.0/developer/reference/frontend/services.html#frontend-services-rpc
+
+```
+setup() {
+      this.rpc = useService("rpc");
+      onWillStart(async () => {
+         const result = await this.rpc("/my/controller", {a: 1, b: 2});
+         // ...
+      });
+}
+```
+
+1. Update `Dashboard` so that it uses the `rpc` service
+2. Call the statistics route `/awesome_dashboard/statistics` in the `onWillStart` hook.
+3. Display a few cards in the dashboard containing:
+- Number of new orders this month
+- Total amount of new orders this month
+- Average amount of t-shirt by order this month
+- Number of cancelled orders this month
+- Average time for an order to go from ‘new’ to ‘sent’ or ‘cancelled’
