@@ -476,3 +476,104 @@ registry
     });
   }
 ```
+
+
+## 6. Display a pie chart
+
+Everyone likes charts (!), so let us add a pie chart in our dashboard. It will display the proportions of t-shirts sold for each size: S/M/L/XL/XXL.
+
+For this exercise, we will use **Chart.js**. It is the chart library used by the graph view. However, it is not loaded by default, so we will need to either add it to our assets bundle, or lazy load it. Lazy loading is usually better since our users will not have to load the chartjs code every time if they don’t need it.
+
+1. Create a `PieChart` component.
+2. In its `onWillStart` method, load chartjs, you can use the `loadJs` function to load `/web/static/lib/Chart/Chart.js`.
+3. Use the `PieChart` component in a `DashboardItem` to display a pie chart that shows the quantity for each sold t-shirts in each size (that information is available in the `/statistics` route). Note that you can use the `size` property to make it look larger.
+4. The `PieChart` component will need to render a canvas, and draw on it using `chart.js`.
+5. Make it work!
+
+- **tutorials/awesome_dashboard/static/src/pie_chart/pie_chart.js**
+```
+/** @odoo-module */
+
+import { loadJS } from "@web/core/assets";
+import { getColor } from "@web/core/colors/colors";
+import {
+  Component,
+  onWillStart,
+  useRef,
+  onMounted,
+  onWillUnmount,
+} from "@odoo/owl";
+
+export class PieChart extends Component {
+  static template = "awesome_dashboard.PieChart";
+  static props = {
+    label: String,
+    data: Object,
+  };
+
+  setup() {
+    this.canvasRef = useRef("canvas");
+    onWillStart(() => loadJS(["/web/static/lib/Chart/Chart.js"]));
+    onMounted(() => {
+      this.renderChart();
+    });
+    onWillUnmount(() => {
+      this.chart.destroy();
+    });
+  }
+
+  renderChart() {
+    const labels = Object.keys(this.props.data);
+    const data = Object.values(this.props.data);
+    const color = labels.map((_, index) => getColor(index));
+    this.chart = new Chart(this.canvasRef.el, {
+      type: "pie",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: this.props.label,
+            data: data,
+            backgroundColor: color,
+          },
+        ],
+      },
+    });
+  }
+}
+```
+
+- **tutorials/awesome_dashboard/static/src/pie_chart/pie_chart.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.PieChart">
+        <div t-att-class="'h-100 ' + props.class" t-ref="root">
+            <div class="h-100 position-relative" t-ref="container">
+                <canvas t-ref="canvas" />
+            </div>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+...
+import { PieChart } from "./pie_chart/pie_chart";
+...
+class AwesomeDashboard extends Component {
+  static template = "awesome_dashboard.AwesomeDashboard";
+  static components = { Layout, DashboardItem, PieChart };
+...
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.xml**
+```
+...
+<DashboardItem size="2">
+    Shirt orders by size
+    <PieChart data="statistics['orders_by_size']" label="'Shirt orders by size'"/>
+</DashboardItem>
+...
+```
