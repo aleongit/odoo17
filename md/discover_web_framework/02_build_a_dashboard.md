@@ -437,3 +437,42 @@ If you open the **Network** tab of your browser’s dev tools, you will see that
 - https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/core/network/http_service.js
 - https://github.com/odoo/odoo/blob/17.0/addons/web/static/src/core/user_service.js
 
+
+- **tutorials/awesome_dashboard/static/src/statistics_service.js**
+```
+/** @odoo-module */
+
+import { registry } from "@web/core/registry";
+import { memoize } from "@web/core/utils/functions";
+
+const statisticsService = {
+  dependencies: ["rpc"],
+  async: ["loadStatistics"],
+  start(env, { rpc }) {
+    return {
+      loadStatistics: memoize(() => rpc("/awesome_dashboard/statistics")),
+    };
+  },
+};
+
+registry
+  .category("services")
+  .add("awesome_dashboard.statistics", statisticsService);
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+  setup() {
+    this.action = useService("action");
+    // this.rpc = useService("rpc");
+    this.statistics = useService("awesome_dashboard.statistics");
+    this.display = {
+      controlPanel: {},
+    };
+
+    onWillStart(async () => {
+      // this.statistics = await this.rpc("/awesome_dashboard/statistics");
+      this.statistics = await this.statistics.loadStatistics();
+    });
+  }
+```
