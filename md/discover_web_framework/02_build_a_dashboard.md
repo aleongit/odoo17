@@ -577,3 +577,75 @@ class AwesomeDashboard extends Component {
 </DashboardItem>
 ...
 ```
+
+
+## 7. Real life update
+
+Since we moved the data loading in a cache, it never updates. But let us say that we are looking at fast moving data, so we want to periodically (for example, every 10min) reload fresh data.
+
+This is quite simple to implement, with a `setTimeout` or `setInterval` in the statistics service. However, here is the tricky part: if the dashboard is currently being displayed, it should be updated immediately.
+
+To do that, one can use a `reactive` object: it is just like the proxy returned by `useState`, but not linked to any component. A component can then do a `useState` on it to subscribe to its changes.
+
+1. Update the statistics service to reload data every 10 minutes (to test it, use 10s instead!)
+2. Modify it to return a **reactive** object. Reloading data should update the reactive object in place.
+3. The `Dashboard` component can now use it with a `useState`
+
+https://github.com/odoo/owl/blob/master/doc/v2/reference/reactivity.md#reactive
+https://github.com/odoo/owl/blob/master/doc/v2/reference/reactivity.md
+
+- **tutorials/awesome_dashboard/static/src/statistics_service.js**
+```
+/** @odoo-module */
+
+import { registry } from "@web/core/registry";
+import { reactive } from "@odoo/owl";
+
+const statisticsService = {
+  dependencies: ["rpc"],
+  start(env, { rpc }) {
+    const statistics = reactive({ isReady: false });
+
+    async function loadData() {
+      const updates = await rpc("/awesome_dashboard/statistics");
+      Object.assign(statistics, updates, { isReady: true });
+    }
+
+    setInterval(loadData, 10 * 60 * 1000);
+    loadData();
+
+    return statistics;
+  },
+};
+
+registry
+  .category("services")
+  .add("awesome_dashboard.statistics", statisticsService);
+```
+
+
+- **tutorials/awesome_dashboard/static/src/dashboard.js**
+```
+/** @odoo-module **/
+
+import { Component, onWillStart, useState } from "@odoo/owl";
+...
+
+class AwesomeDashboard extends Component {
+...
+  setup() {
+    this.statistics = useState(useService("awesome_dashboard.statistics"));
+  }
+}
+...
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard.xml**
+```
+...
+<div class="d-flex flex-wrap" t-if="statistics.isReady">
+    <DashboardItem>
+        some content
+    </DashboardItem>
+...
+```
