@@ -972,3 +972,114 @@ class AwesomeDashboard extends Component {
     this.items = registry.category("awesome_dashboard").getAll();
   }
 ```
+
+## 11. Add and remove dashboard items
+
+Let us see how we can make our dashboard customizable. To make it simple, we will save the user dashboard configuration in the local storage so that it is persistent, but we don’t have to deal with the server for now.
+
+The dashboard configuration will be saved as a list of removed item ids.
+
+1. Add a button in the control panel with a gear icon to indicate that it is a settings button.
+2. Clicking on that button should open a dialog.
+3. In that dialog, we want to see a list of all existing dashboard items, each with a checkbox.
+4. There should be a `Apply` button in the footer. Clicking on it will build a list of all item ids that are unchecked.
+5. We want to store that value in the local storage.
+6. And modify the `Dashboard` component to filter the current items by removing the ids of items from the configuration.
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard.js**
+```
+import { Dialog } from "@web/core/dialog/dialog";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { browser } from "@web/core/browser/browser";
+...
+  setup() {
+...
+    this.dialog = useService("dialog");
+    this.state = useState({
+      disabledItems:
+        browser.localStorage.getItem("disabledDashboardItems")?.split(",") ||
+        [],
+    });
+  }
+
+  openConfiguration() {
+    this.dialog.add(ConfigurationDialog, {
+      items: this.items,
+      disabledItems: this.state.disabledItems,
+      onUpdateConfiguration: this.updateConfiguration.bind(this),
+    });
+  }
+
+  updateConfiguration(newDisabledItems) {
+    this.state.disabledItems = newDisabledItems;
+  }
+...
+class ConfigurationDialog extends Component {
+  static template = "awesome_dashboard.ConfigurationDialog";
+  static components = { Dialog, CheckBox };
+  static props = ["close", "items", "disabledItems", "onUpdateConfiguration"];
+
+  setup() {
+    this.items = useState(
+      this.props.items.map((item) => {
+        return {
+          ...item,
+          enabled: !this.props.disabledItems.includes(item.id),
+        };
+      }),
+    );
+  }
+
+  done() {
+    this.props.close();
+  }
+
+  onChange(checked, changedItem) {
+    changedItem.enabled = checked;
+    const newDisabledItems = Object.values(this.items)
+      .filter((item) => !item.enabled)
+      .map((item) => item.id);
+
+    browser.localStorage.setItem("disabledDashboardItems", newDisabledItems);
+
+    this.props.onUpdateConfiguration(newDisabledItems);
+  }
+}
+...
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="awesome_dashboard.AwesomeDashboard">
+      <Layout display="display" className="'o_dashboard h-100'">
+...
+          <t t-set-slot="control-panel-additional-actions">
+              <button t-on-click="openConfiguration" class="btn p-0 ms-1 border-0">
+                  <i class="fa fa-bars"></i>
+              </button>
+          </t>
+...
+      </Layout>
+  </t>
+
+  <t t-name="awesome_dashboard.ConfigurationDialog">
+      <Dialog title="'Dashboard items configuration'">
+          Which cards do you whish to see ?
+          <t t-foreach="items" t-as="item" t-key="item.id">
+              <CheckBox value="item.enabled" onChange="(ev) => this.onChange(ev, item)">
+                  <t t-esc="item.description"/>
+              </CheckBox>
+          </t>
+          <t t-set-slot="footer">
+              <button class="btn btn-primary" t-on-click="done">
+                  Done
+              </button>
+          </t>
+      </Dialog>
+  </t>
+
+</templates>
+```
