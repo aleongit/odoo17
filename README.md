@@ -2,11 +2,11 @@
 
 Checkpoints:
 
-- ✔️ install Odoo 17 on-premise with Source install on Ubuntu Server 24.04.1 LTS
-- ✔️ Odoo 17 tutorials: Server framework 101
-- ✔️ Odoo 17 tutorials: Discover the web framework
-- ✔️ Odoo 17 tutorials: Master the web framework
-- ✔️ AEODOO training of Odoo 17
+- install Odoo 17 on-premise with Source install on Ubuntu Server 24.04.1 LTS
+- Odoo 17 tutorials: Server framework 101
+- Odoo 17 tutorials: Discover the web framework
+- Odoo 17 tutorials: Master the web framework
+- AEODOO training of Odoo 17
 
 
 ## Tutorial - Server framework 101
