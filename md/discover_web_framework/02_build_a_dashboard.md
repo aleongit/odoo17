@@ -649,3 +649,66 @@ class AwesomeDashboard extends Component {
     </DashboardItem>
 ...
 ```
+
+## 8. Lazy loading the dashboard
+
+Let us imagine that our dashboard is getting quite big, and is only of interest to some of our users. In that case, it could make sense to lazy load our dashboard, and all related assets, so we only pay the cost of loading the code when we actually want to look at it.
+
+One way to do this is to use `LazyComponent` (from `@web/core/assets`) as an intermediate that will load an asset bundle before displaying our component.
+
+**example_action.js:**
+```
+export class ExampleComponentLoader extends Component {
+    static components = { LazyComponent };
+    static template = xml`
+        <LazyComponent bundle="'example_module.example_assets'" Component="'ExampleComponent'" />
+    `;
+}
+
+registry.category("actions").add("example_module.example_action", ExampleComponentLoader);
+```
+
+1. Move all dashboard assets into a sub folder `/dashboard` to make it easier to add to a bundle.
+2. Create a `awesome_dashboard.dashboard` assets bundle containing all content of the `/dashboard` folder.
+3. Modify `dashboard.js` to register itself to the `lazy_components` registry instead of `actions`.
+4. In `src/dashboard_action.js`, create an intermediate component that uses `LazyComponent` and register it to the `actions` registry.
+
+
+- **tutorials/awesome_dashboard/__manifest__.py**
+```
+{
+    'name': "Awesome Dashboard",
+...
+    'assets': {
+        'web.assets_backend': [
+            'awesome_dashboard/static/src/**/*',
+            ('remove', 'awesome_dashboard/static/src/dashboard/**/*'),
+        ],
+        'awesome_dashboard.dashboard': [
+            'awesome_dashboard/static/src/dashboard/**/*'
+        ]
+    },
+    'license': 'AGPL-3'
+}
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard_loader.js**
+```
+/** @odoo-module */
+
+import { registry } from "@web/core/registry";
+import { LazyComponent } from "@web/core/assets";
+import { Component, xml } from "@odoo/owl";
+
+class AwesomeDashboardLoader extends Component {
+  static components = { LazyComponent };
+  static template = xml`
+    <LazyComponent bundle="'awesome_dashboard.dashboard'" Component="'AwesomeDashboard'" props="props"/>
+    `;
+}
+
+registry
+  .category("actions")
+  .add("awesome_dashboard.dashboard", AwesomeDashboardLoader);
+
+```
