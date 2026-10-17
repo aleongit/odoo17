@@ -54,7 +54,7 @@ export const items = [
     id: "pie_chart",
     description: "Shirt orders by size",
     Component: PieChartCard,
-    size: 2,
+    size: 1,
     props: (data) => ({
       title: "Shirt orders by size",
       values: data.orders_by_size,
