@@ -1083,3 +1083,12 @@ class ConfigurationDialog extends Component {
 
 </templates>
 ```
+
+## 12. Going further
+
+Here is a list of some small improvements you could try to do if you have the time:
+
+1. Make sure your application can be translated (with `env._t`).
+2. Clicking on a section of the pie chart should open a list view of all orders that have the corresponding size.
+3. Save the content of the dashboard in a user setting on the server!
+4. Make it responsive: in mobile mode, each card should take 100% of the width.
