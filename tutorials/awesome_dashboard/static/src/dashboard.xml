@@ -7,7 +7,7 @@
                 <button class="btn btn-primary" t-on-click="openCustomerView">Customers</button>
                 <button class="btn btn-primary" t-on-click="openLeads">Leads</button>
             </t>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap" t-if="statistics.isReady">
                 <DashboardItem>
                     some content
                 </DashboardItem>
