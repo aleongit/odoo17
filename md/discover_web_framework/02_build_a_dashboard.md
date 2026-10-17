@@ -712,3 +712,228 @@ registry
   .add("awesome_dashboard.dashboard", AwesomeDashboardLoader);
 
 ```
+
+
+## 9. Making our dashboard generic
+
+So far, we have a nice working dashboard. But it is currently hardcoded in the dashboard template. What if we want to customize our dashboard? Maybe some users have different needs and want to see other data.
+
+So, the next step is to make our dashboard generic: instead of hard-coding its content in the template, it can just iterate over a list of dashboard items. But then, many questions come up: how to represent a dashboard item, how to register it, what data should it receive, and so on. There are many different ways to design such a system, with different trade-offs.
+
+For this tutorial, we will say that a dashboard item is an object with the following structure:
+
+```
+const item = {
+   id: "average_quantity",
+   description: "Average amount of t-shirt",
+   Component: StandardItem,
+   // size and props are optionals
+   size: 3,
+   props: (data) => ({
+      title: "Average amount of t-shirt by order this month",
+      value: data.average_quantity
+   }),
+};
+```
+
+The `description` value will be useful in a later exercise to show the name of items that the user can add to their dashboard. The `size` number is optional, and simply describes the size of the dashboard item that will be displayed. Finally, the `props` function is optional. If not given, we will simply give the `statistics` object as data. But if it is defined, it will be used to compute specific props for the component.
+
+The goal is to replace the content of the dashboard with the following snippet:
+```
+<t t-foreach="items" t-as="item" t-key="item.id">
+   <DashboardItem size="item.size || 1">
+      <t t-set="itemProp" t-value="item.props ? item.props(statistics) : {'data': statistics}"/>
+      <t t-component="item.Component" t-props="itemProp" />
+   </DashboardItem>
+</t>
+```
+
+Note that the above example features two advanced features of Owl: dynamic components and dynamic props.
+
+We currently have two kinds of item components: number cards with a title and a number, and pie cards with some label and a pie chart.
+
+1. Create and implement two components: `NumberCard` and `PieChartCard`, with the corresponding props.
+2. Create a file `dashboard_items.js` in which you define and export a list of items, using `NumberCard` and `PieChartCard` to recreate our current dashboard.
+3. Import that list of items in our `Dashboard` component, add it to the component, and update the template to use a `t-foreach` like shown above.
+```
+setup() {
+   this.items = items;
+}
+```
+
+And now, our dashboard template is generic!
+
+- **tutorials/awesome_dashboard/static/src/dashboard/number_card/number_card.js**
+```
+/** @odoo-module */
+
+import { Component } from "@odoo/owl";
+
+export class NumberCard extends Component {
+  static template = "awesome_dashboard.NumberCard";
+  static props = {
+    title: {
+      type: String,
+    },
+    value: {
+      type: Number,
+    },
+  };
+}
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/number_card/number_card.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.NumberCard" owl="1">
+        <t t-esc="props.title"/>
+        <div class="fs-1 fw-bold text-success text-center">
+            <t t-esc="props.value"/>
+        </div>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/pie_chart_card/pie_chart_card.js**
+```
+/** @odoo-module */
+
+import { Component } from "@odoo/owl";
+import { PieChart } from "../pie_chart/pie_chart";
+
+export class PieChartCard extends Component {
+  static template = "awesome_dashboard.PieChartCard";
+  static components = { PieChart };
+  static props = {
+    title: {
+      type: String,
+    },
+    values: {
+      type: Object,
+    },
+  };
+}
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/pie_chart_card/pie_chart_card.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="awesome_dashboard.PieChartCard" owl="1">
+        <t t-esc="props.title"/>
+        <PieChart data="props.values" label="''"/>
+    </t>
+</templates>
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard_items.js**
+```
+/** @odoo-module */
+
+import { NumberCard } from "./number_card/number_card";
+import { PieChartCard } from "./pie_chart_card/pie_chart_card";
+
+export const items = [
+  {
+    id: "average_quantity",
+    description: "Average amount of t-shirt",
+    Component: NumberCard,
+    props: (data) => ({
+      title: "Average amount of t-shirt by order this month",
+      value: data.average_quantity,
+    }),
+  },
+  {
+    id: "average_time",
+    description: "Average time for an order",
+    Component: NumberCard,
+    props: (data) => ({
+      title:
+        "Average time for an order to go from 'new' to 'sent' or 'cancelled'",
+      value: data.average_time,
+    }),
+  },
+  {
+    id: "number_new_orders",
+    description: "New orders this month",
+    Component: NumberCard,
+    props: (data) => ({
+      title: "Number of new orders this month",
+      value: data.nb_new_orders,
+    }),
+  },
+  {
+    id: "cancelled_orders",
+    description: "Cancelled orders this month",
+    Component: NumberCard,
+    props: (data) => ({
+      title: "Number of cancelled orders this month",
+      value: data.nb_cancelled_orders,
+    }),
+  },
+  {
+    id: "amount_new_orders",
+    description: "amount orders this month",
+    Component: NumberCard,
+    props: (data) => ({
+      title: "Total amount of new orders this month",
+      value: data.total_amount,
+    }),
+  },
+  {
+    id: "pie_chart",
+    description: "Shirt orders by size",
+    Component: PieChartCard,
+    size: 2,
+    props: (data) => ({
+      title: "Shirt orders by size",
+      values: data.orders_by_size,
+    }),
+  },
+];
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard.js**
+```
+/** @odoo-module **/
+...
+import { items } from "./dashboard_items";
+
+class AwesomeDashboard extends Component {
+  static template = "awesome_dashboard.AwesomeDashboard";
+  static components = { Layout, DashboardItem };
+
+  setup() {
+...
+    };
+    this.items = items;
+  }
+...
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard.xml**
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="awesome_dashboard.AwesomeDashboard">
+        <Layout display="display" className="'o_dashboard h-100'">
+            <t t-set-slot="layout-buttons">
+                <button class="btn btn-primary" t-on-click="openCustomerView">Customers</button>
+                <button class="btn btn-primary" t-on-click="openLeads">Leads</button>
+            </t>
+            <div class="d-flex flex-wrap" t-if="statistics.isReady">
+                <t t-foreach="items" t-as="item" t-key="item.id">
+                    <DashboardItem size="item.size || 1">
+                        <t t-set="itemProp" t-value="item.props ? item.props(statistics) : {'data': statistics}"/>
+                        <t t-component="item.Component" t-props="itemProp" />
+                    </DashboardItem>
+                </t>
+            </div>
+        </Layout>
+    </t>
+
+</templates>
+
+```
