@@ -937,3 +937,38 @@ class AwesomeDashboard extends Component {
 </templates>
 
 ```
+
+## 10. Making our dashboard extensible
+
+However, the content of our item list is still hardcoded. Let us fix that by using a registry:
+
+1. Instead of exporting a list, register all dashboard items in a `awesome_dashboard` registry
+2. Import all the items of the `awesome_dashboard` registry in the `Dashboard` component
+
+The dashboard is now easily extensible. Any other Odoo addon that wants to register a new item to the dashboard can just add it to the registry.
+
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard_items.js**
+```
+import { registry } from "@web/core/registry";
+
+const items = [
+...
+]
+
+items.forEach(item => {
+    registry.category("awesome_dashboard").add(item.id, item);
+});
+```
+
+- **tutorials/awesome_dashboard/static/src/dashboard/dashboard.js**
+```
+class AwesomeDashboard extends Component {
+  static template = "awesome_dashboard.AwesomeDashboard";
+  static components = { Layout, DashboardItem };
+
+  setup() {
+...
+    this.items = registry.category("awesome_dashboard").getAll();
+  }
+```
